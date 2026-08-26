@@ -7,34 +7,49 @@ const ai = new GoogleGenAI({
 const sessions = globalThis.__EDUCATION_GPT_SESSIONS ||= new Map();
 
 const SYSTEM = `
-أنت Education GPT، مساعد تعليمي ذكي وودود يتحدث مع الطالب بشكل طبيعي جدًا.
+أنت Education GPT، مساعد ذكاء اصطناعي تعليمي ذكي وودود.
 
-أسلوبك:
-- لا تجب بإجابات قصيرة جدًا إلا إذا كان السؤال بسيطًا فعلًا.
-- تحدث بأسلوب بشري طبيعي، وليس كأنك روبوت.
-- افهم سياق المحادثة السابقة واربط إجابتك بما قاله المستخدم.
-- اسأل أسئلة متابعة ذكية عندما يكون ذلك مفيدًا.
-- إذا كان المستخدم يريد شرحًا، اشرح خطوة بخطوة مع أمثلة.
-- إذا كان يريد رأيًا أو نقاشًا، ناقشه واذكر الأسباب.
-- إذا أخطأ المستخدم، صحح له بلطف واشرح لماذا.
-- إذا كان الموضوع دراسيًا، تعامل معه كمدرس خصوصي ممتاز.
-- لا تكرر نفس الجملة أو نفس المعلومات بلا داعٍ.
-- لا تبدأ كل إجابة بعبارات ثابتة مثل "بالتأكيد!".
-- اجعل طول الإجابة مناسبًا للسؤال، لكن لا تختصر بشكل مبالغ فيه.
-- استخدم العربية الطبيعية عندما يكتب المستخدم بالعربية.
-- يمكنك استخدام الرموز التعبيرية باعتدال عندما تناسب السياق.
-- تذكر المعلومات السابقة داخل المحادثة الحالية.
+تحدث مع المستخدم بشكل طبيعي مثل مساعد ذكي حقيقي.
+افهم سياق المحادثة السابقة واربط الإجابة بما قاله المستخدم.
+لا تعطِ إجابات قصيرة بشكل مبالغ فيه.
+اسأل أسئلة متابعة ذكية عندما يكون ذلك مفيدًا.
+في الشرح الدراسي: اشرح خطوة بخطوة مع أمثلة.
+إذا أخطأ المستخدم، صحح له بلطف ووضح السبب.
+في الاختبارات: اسأل سؤالًا واحدًا في كل مرة وانتظر الإجابة.
+استخدم العربية الطبيعية إذا كان المستخدم يكتب بالعربية.
+لا تختلق معلومات.
 `;
 
-async function generate(model, history) {
-  return ai.models.generateContent({
-    model,
-    contents: history,
-    config: {
-      systemInstruction: SYSTEM,
-      maxOutputTokens: 2500
+async function getStream(history) {
+  try {
+    return await ai.models.generateContentStream({
+      model: "gemini-3.7-flash",
+      contents: history,
+      config: {
+        systemInstruction: SYSTEM,
+        maxOutputTokens: 1800
+      }
+    });
+  } catch (error) {
+    const message = String(error?.message || "");
+
+    if (
+      message.includes("503") ||
+      message.includes("UNAVAILABLE") ||
+      message.includes("high demand")
+    ) {
+      return await ai.models.generateContentStream({
+        model: "gemini-3.6-flash",
+        contents: history,
+        config: {
+          systemInstruction: SYSTEM,
+          maxOutputTokens: 1800
+        }
+      });
     }
-  });
+
+    throw error;
+  }
 }
 
 export default async function handler(req, res) {
@@ -67,41 +82,42 @@ export default async function handler(req, res) {
       }
     ].slice(-30);
 
-    let response;
+    const stream = await getStream(history);
 
-    try {
-      response = await generate("gemini-3.7-flash", history);
-    } catch (err) {
-      const msg = String(err?.message || "");
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "text/plain; charset=utf-8");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("X-Content-Type-Options", "nosniff");
 
-      if (
-        msg.includes("503") ||
-        msg.includes("UNAVAILABLE") ||
-        msg.includes("high demand")
-      ) {
-        response = await generate("gemini-3.6-flash", history);
-      } else {
-        throw err;
+    let fullAnswer = "";
+
+    for await (const chunk of stream) {
+      const text = chunk.text || "";
+
+      if (text) {
+        fullAnswer += text;
+        res.write(text);
       }
     }
 
-    const answer =
-      response.text || "مش قادر أجاوب الآن، جرّب مرة ثانية.";
+    res.end();
 
     history.push({
       role: "model",
-      parts: [{ text: answer }]
+      parts: [{ text: fullAnswer }]
     });
 
     sessions.set(sessionId, history.slice(-30));
 
-    return res.status(200).json({ answer });
-
   } catch (error) {
     console.error(error);
 
-    return res.status(500).json({
-      error: error?.message || "حدث خطأ أثناء الاتصال بـ Gemini"
-    });
+    if (!res.headersSent) {
+      return res.status(500).json({
+        error: error?.message || "حدث خطأ أثناء الاتصال بـ Gemini"
+      });
+    }
+
+    res.end();
   }
 }
