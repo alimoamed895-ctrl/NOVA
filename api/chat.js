@@ -1,4 +1,4 @@
-```javascript
+```javascript id="1h8pkh"
 import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({
@@ -6,77 +6,49 @@ const ai = new GoogleGenAI({
 });
 
 const sessions =
-  globalThis.__EDUCATION_GPT_SESSIONS ||= new Map();
+  globalThis.__EDUCATION_GPT_SESSIONS || new Map();
 
-const SYSTEM_PROMPT = `
-أنت Education GPT، مساعد ذكاء اصطناعي عام وشامل وسريع وذكي.
+globalThis.__EDUCATION_GPT_SESSIONS = sessions;
 
-أنت لست مساعدًا تعليميًا فقط.
-ساعد المستخدم في أي موضوع مسموح ومفيد، ومن ذلك:
+const SYSTEM_PROMPT = [
+  "أنت Education GPT، مساعد ذكاء اصطناعي عام وشامل وسريع وذكي.",
+  "",
+  "ساعد المستخدم في التعليم، البرمجة، الكتابة، التلخيص، الترجمة، التخطيط،",
+  "المحادثة العامة، المشاريع، تطوير المواقع، الألعاب، حل المشكلات، والعصف الذهني.",
+  "",
+  "أنت لست مدرسًا فقط.",
+  "إذا طلب المستخدم البرمجة، تصرف كمبرمج ومهندس برمجيات.",
+  "إذا طلب الكتابة، اكتب النص المطلوب مباشرة وبأسلوب مناسب.",
+  "إذا طلب التعليم، اشرح خطوة بخطوة وبأمثلة.",
+  "إذا طلب فكرة مشروع أو لعبة، ساعده في تحويلها إلى خطوات وكود عملي.",
+  "",
+  "تحدث بشكل طبيعي وبشري.",
+  "افهم سياق المحادثة الحالية وتذكر ما قيل سابقًا.",
+  "لا تعطِ إجابات قصيرة بشكل مبالغ فيه.",
+  "لا تكرر نفسك.",
+  "إذا كانت المعلومات ناقصة، اسأل سؤال متابعة بدل التخمين.",
+  "إذا أخطأ المستخدم، صححه بلطف واشرح السبب.",
+  "لا تختلق معلومات.",
+  "استخدم العربية عندما يكتب المستخدم بالعربية.",
+  "استخدم المصطلحات الإنجليزية عند الحاجة في البرمجة والتقنية.",
+  "لا تدّعي أنك نفذت شيئًا لم تنفذه فعليًا."
+].join("\n");
 
-- المحادثة العامة والأسئلة اليومية.
-- التعليم والشرح والمذاكرة والاختبارات.
-- الرياضيات والعلوم واللغات والتاريخ.
-- البرمجة وكتابة الكود وتصحيحه وشرح الأخطاء.
-- HTML وCSS وJavaScript وPython وC++ وSQL وغيرها.
-- تطوير المواقع والتطبيقات والمشاريع.
-- كتابة المقالات والرسائل والقصص والأفكار والمحتوى.
-- إعادة الصياغة والتلخيص والترجمة.
-- العصف الذهني وتوليد الأفكار.
-- تصميم الألعاب وأفكار الألعاب ومنطق اللعب والكود الخاص بها.
-- التخطيط وتنظيم الوقت والمشاريع.
-- تحليل الصور والملفات عندما يتم إرسالها عبر النظام.
-- المساعدة في المشاريع الشخصية والدراسية والتقنية.
+function isTemporaryError(error) {
+  const message =
+    String(error && error.message ? error.message : "").toLowerCase();
 
-أسلوبك:
+  return (
+    message.includes("503") ||
+    message.includes("unavailable") ||
+    message.includes("high demand") ||
+    message.includes("overloaded") ||
+    message.includes("temporarily")
+  );
+}
 
-1. تحدث بشكل طبيعي جدًا مثل مساعد ذكي حقيقي.
-2. افهم سياق المحادثة السابقة واربط الرد بما قاله المستخدم.
-3. لا ترد بإجابة قصيرة جدًا بلا سبب.
-4. أعطِ إجابة كاملة ومباشرة.
-5. عندما يحتاج الموضوع شرحًا، اشرح خطوة بخطوة.
-6. عندما يكون المطلوب كودًا، أعطِ كودًا واضحًا وقابلًا للاستخدام، مع شرح مختصر عند الحاجة.
-7. عندما يطلب المستخدم مشروعًا، ساعده في تحويل الفكرة إلى خطوات عملية.
-8. عندما يطلب كتابة، اكتب النص المطلوب مباشرة وبأسلوب مناسب.
-9. عندما يطلب مقارنة، وضّح الفروق والمزايا والعيوب بوضوح.
-10. إذا كانت المعلومات ناقصة، اسأل سؤال متابعة ذكيًا بدل التخمين.
-11. إذا كان المستخدم مخطئًا، صححه بلطف ووضح السبب.
-12. لا تكرر نفسك.
-13. لا تبدأ كل رد بعبارات محفوظة مثل "بالتأكيد!" أو "بالطبع!".
-14. استخدم العربية الطبيعية عندما يكتب المستخدم بالعربية.
-15. يمكنك استخدام الإنجليزية أو المصطلحات البرمجية عندما تكون أنسب.
-16. كن ودودًا، لكن لا تبالغ في الإيموجي.
-17. لا تخترع معلومات أو مصادر أو نتائج لم تحصل عليها.
-18. لا تدّعي أنك أنشأت صورة أو ملفًا أو نفذت كودًا إذا لم يتم ذلك فعليًا.
-19. إذا كان الطلب يحتاج أداة أو قدرة غير متاحة في هذه المحادثة، قل ذلك بوضوح واقترح البديل الممكن.
-20. حافظ على شخصية Education GPT كمساعد شخصي شامل، وليس كمدرس فقط.
-
-عند البرمجة:
-- افهم الهدف قبل اقتراح الحل.
-- اكتب كودًا منظمًا.
-- أصلح الأخطاء بدل إعادة كتابة المشروع بلا سبب.
-- اشرح السبب الحقيقي للمشكلة عند الإمكان.
-- عندما يكون الطلب كبيرًا، نفذه على مراحل واضحة.
-
-عند التعليم:
-- اشرح من المستوى المناسب للمستخدم.
-- استخدم أمثلة.
-- اختبر الفهم عندما يكون ذلك مفيدًا.
-- لا تجعل كل إجابة على شكل درس إذا لم يطلب المستخدم ذلك.
-
-عند الكتابة:
-- اكتب النص النهائي مباشرة عندما يكون المطلوب نصًا جاهزًا.
-- التزم بالنبرة والطول والأسلوب المطلوب.
-
-عند المحادثة العامة:
-- تحدث بحرية وطبيعية.
-- تذكر تفاصيل المحادثة الحالية.
-- تابع النقاش بدل إعادة تشغيله من الصفر في كل رسالة.
-`;
-
-function buildHistory(sessionId, message) {
-  const previous =
-    sessions.get(sessionId) || [];
+function getHistory(sessionId, message) {
+  const previous = sessions.get(sessionId) || [];
 
   return [
     ...previous,
@@ -88,33 +60,16 @@ function buildHistory(sessionId, message) {
         }
       ]
     }
-  ].slice(-24);
+  ].slice(-20);
 }
 
-function isTemporaryError(error) {
-  const msg =
-    String(error?.message || "").toLowerCase();
-
-  return (
-    msg.includes("503") ||
-    msg.includes("unavailable") ||
-    msg.includes("high demand") ||
-    msg.includes("overloaded") ||
-    msg.includes("temporarily")
-  );
-}
-
-async function createPrimaryStream(history) {
+async function createMainStream(history) {
   return ai.models.generateContentStream({
     model: "gemini-3.7-flash",
-
     contents: history,
-
     config: {
       systemInstruction: SYSTEM_PROMPT,
-
       maxOutputTokens: 3000,
-
       thinkingConfig: {
         thinkingLevel: "low"
       }
@@ -125,9 +80,7 @@ async function createPrimaryStream(history) {
 async function createFallbackStream(history) {
   return ai.models.generateContentStream({
     model: "gemini-3.5-flash-lite",
-
     contents: history,
-
     config: {
       systemInstruction: SYSTEM_PROMPT,
       maxOutputTokens: 2200
@@ -136,7 +89,6 @@ async function createFallbackStream(history) {
 }
 
 export default async function handler(req, res) {
-
   if (req.method !== "POST") {
     return res.status(405).json({
       error: "Method Not Allowed"
@@ -144,51 +96,38 @@ export default async function handler(req, res) {
   }
 
   try {
-
     if (!process.env.GEMINI_API_KEY) {
       return res.status(500).json({
-        error:
-          "GEMINI_API_KEY غير موجود في Vercel"
+        error: "GEMINI_API_KEY غير موجود في Vercel"
       });
     }
 
-    const {
-      sessionId,
-      message
-    } = req.body || {};
+    const body = req.body || {};
+
+    const sessionId = body.sessionId;
+    const message = body.message;
 
     if (!sessionId || !message) {
       return res.status(400).json({
-        error:
-          "sessionId و message مطلوبان"
+        error: "sessionId و message مطلوبان"
       });
     }
 
-    const history =
-      buildHistory(
-        sessionId,
-        message
-      );
+    const history = getHistory(
+      sessionId,
+      message
+    );
 
     let stream;
 
     try {
-
-      stream =
-        await createPrimaryStream(
-          history
-        );
-
+      stream = await createMainStream(history);
     } catch (error) {
-
       if (!isTemporaryError(error)) {
         throw error;
       }
 
-      stream =
-        await createFallbackStream(
-          history
-        );
+      stream = await createFallbackStream(history);
     }
 
     res.statusCode = 200;
@@ -208,20 +147,16 @@ export default async function handler(req, res) {
       "no"
     );
 
-    if (
-      typeof res.flushHeaders === "function"
-    ) {
+    if (typeof res.flushHeaders === "function") {
       res.flushHeaders();
     }
 
     let fullAnswer = "";
 
-    for await (
-      const chunk of stream
-    ) {
-
-      const text =
-        chunk.text || "";
+    for await (const chunk of stream) {
+      const text = chunk && chunk.text
+        ? chunk.text
+        : "";
 
       if (!text) {
         continue;
@@ -245,21 +180,21 @@ export default async function handler(req, res) {
 
     sessions.set(
       sessionId,
-      history.slice(-24)
+      history.slice(-20)
     );
 
   } catch (error) {
-
     console.error(
-      "Education GPT error:",
+      "Education GPT runtime error:",
       error
     );
 
     if (!res.headersSent) {
       return res.status(500).json({
         error:
-          error?.message ||
-          "حدث خطأ أثناء تشغيل Education GPT"
+          error && error.message
+            ? error.message
+            : "حدث خطأ أثناء تشغيل Education GPT"
       });
     }
 
