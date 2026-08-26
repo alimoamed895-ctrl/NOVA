@@ -1,3 +1,4 @@
+```javascript
 import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({
@@ -5,43 +6,25 @@ const ai = new GoogleGenAI({
 });
 
 const sessions =
-  globalThis.__EDUCATION_GPT_SESSIONS || new Map();
+  globalThis.__EDUCATION_GPT_INTERACTIONS || new Map();
 
-globalThis.__EDUCATION_GPT_SESSIONS = sessions;
+globalThis.__EDUCATION_GPT_INTERACTIONS = sessions;
 
 const SYSTEM_PROMPT = [
   "أنت Education GPT، مساعد ذكاء اصطناعي عام وشامل.",
-  "ساعد في التعليم، الكتابة، البرمجة، المشاريع، الألعاب، التخطيط، التلخيص، الترجمة، والمحادثة العامة.",
-  "تحدث بشكل طبيعي وبشري.",
-  "افهم سياق المحادثة الحالية.",
-  "قدم إجابات كاملة ومفيدة.",
-  "إذا كان السؤال يحتاج شرحًا، اشرح خطوة بخطوة.",
+  "ساعد المستخدم في التعليم، الكتابة، البرمجة، تطوير المواقع، الألعاب، المشاريع، التلخيص، الترجمة، التخطيط، والمحادثة العامة.",
+  "تحدث بشكل طبيعي وودود مثل مساعد ذكي حقيقي.",
+  "افهم سياق المحادثة الحالية واستمر فيها بشكل طبيعي.",
+  "قدّم إجابات كاملة ومفيدة، بدون اختصار غير ضروري.",
+  "إذا كان السؤال يحتاج شرحًا، اشرح خطوة بخطوة وبأمثلة.",
   "إذا طلب المستخدم كودًا، اكتب كودًا واضحًا وقابلًا للاستخدام.",
-  "إذا طلب كتابة، اكتب النص المطلوب مباشرة.",
-  "إذا كانت المعلومات ناقصة، اسأل سؤال متابعة.",
+  "إذا طلب المستخدم كتابة، اكتب النص النهائي مباشرة.",
+  "إذا كانت المعلومات ناقصة، اسأل سؤال متابعة ذكيًا.",
   "لا تختلق معلومات.",
   "استخدم العربية عندما يكتب المستخدم بالعربية."
 ].join("\n");
 
-function getHistory(sessionId, message) {
-  const previous =
-    sessions.get(sessionId) || [];
-
-  return [
-    ...previous,
-    {
-      role: "user",
-      parts: [
-        {
-          text: String(message)
-        }
-      ]
-    }
-  ].slice(-12);
-}
-
 export default async function handler(req, res) {
-
   if (req.method !== "POST") {
     return res.status(405).json({
       error: "Method Not Allowed"
@@ -49,7 +32,6 @@ export default async function handler(req, res) {
   }
 
   try {
-
     if (!process.env.GEMINI_API_KEY) {
       return res.status(500).json({
         error: "GEMINI_API_KEY غير موجود في Vercel"
@@ -59,7 +41,7 @@ export default async function handler(req, res) {
     const body = req.body || {};
 
     const sessionId = body.sessionId;
-    const message = body.message;
+    const message = String(body.message || "").trim();
 
     if (!sessionId || !message) {
       return res.status(400).json({
@@ -67,58 +49,90 @@ export default async function handler(req, res) {
       });
     }
 
-    const history =
-      getHistory(
-        sessionId,
-        message
-      );
+    const previousInteractionId =
+      sessions.get(sessionId) || undefined;
 
-    const response =
-      await ai.models.generateContent({
-        model: "gemini-3.7-flash",
+    const options = {
+      model: "gemini-3.6-flash",
+      input: message,
+      system_instruction: SYSTEM_PROMPT,
+      stream: true
+    };
 
-        contents: history,
+    if (previousInteractionId) {
+      options.previous_interaction_id =
+        previousInteractionId;
+    }
 
-        config: {
-          systemInstruction: SYSTEM_PROMPT,
-          maxOutputTokens: 2500
-        }
-      });
+    const stream =
+      await ai.interactions.create(options);
 
-    const answer =
-      response.text ||
-      "لم أستطع إنشاء رد الآن.";
+    res.statusCode = 200;
 
-    history.push({
-      role: "model",
-      parts: [
-        {
-          text: answer
-        }
-      ]
-    });
-
-    sessions.set(
-      sessionId,
-      history.slice(-12)
+    res.setHeader(
+      "Content-Type",
+      "text/plain; charset=utf-8"
     );
 
-    return res.status(200).json({
-      answer
-    });
+    res.setHeader(
+      "Cache-Control",
+      "no-cache, no-transform"
+    );
+
+    res.setHeader(
+      "X-Accel-Buffering",
+      "no"
+    );
+
+    if (typeof res.flushHeaders === "function") {
+      res.flushHeaders();
+    }
+
+    let answer = "";
+
+    for await (const event of stream) {
+      if (
+        event &&
+        event.event_type === "step.delta" &&
+        event.delta &&
+        event.delta.type === "text" &&
+        event.delta.text
+      ) {
+        answer += event.delta.text;
+        res.write(event.delta.text);
+      }
+
+      if (
+        event &&
+        event.event_type === "interaction.completed" &&
+        event.interaction &&
+        event.interaction.id
+      ) {
+        sessions.set(
+          sessionId,
+          event.interaction.id
+        );
+      }
+    }
+
+    res.end();
 
   } catch (error) {
-
     console.error(
       "Education GPT error:",
       error
     );
 
-    return res.status(500).json({
-      error:
-        error && error.message
-          ? error.message
-          : "حدث خطأ أثناء تشغيل Education GPT"
-    });
+    if (!res.headersSent) {
+      return res.status(500).json({
+        error:
+          error && error.message
+            ? error.message
+            : "حدث خطأ أثناء تشغيل Education GPT"
+      });
+    }
+
+    res.end();
   }
 }
+```
