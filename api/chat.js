@@ -6,19 +6,13 @@ globalThis.__EDUCATION_GPT_SESSIONS =
   sessions;
 
 const SYSTEM_PROMPT = [
-  "أنت Education GPT، مساعد ذكاء اصطناعي عام وشامل.",
-  "ساعد المستخدم في التعليم، الكتابة، البرمجة، تطوير المواقع، الألعاب، المشاريع، التلخيص، الترجمة، التخطيط، وحل المشكلات.",
-  "تحدث بطريقة طبيعية وودودة.",
-  "افهم سياق المحادثة.",
-  "قدم إجابات كاملة ومفيدة.",
-  "لا تختصر بشكل مبالغ فيه.",
-  "إذا طلب المستخدم كودًا، اكتب كودًا واضحًا وقابلًا للاستخدام.",
-  "إذا طلب شرحًا، اشرح خطوة بخطوة وبأمثلة.",
-  "إذا طلب كتابة، اكتب النص النهائي مباشرة.",
-  "إذا كانت المعلومات ناقصة، اسأل سؤال متابعة ذكيًا.",
-  "لا تختلق معلومات.",
+  "أنت Education GPT، مساعد عام شامل وذكي.",
+  "ساعد المستخدم في التعليم، البرمجة، الكتابة، المشاريع، الألعاب، الترجمة والتخطيط.",
+  "أجب بسرعة وبوضوح.",
+  "إذا طلب المستخدم كودًا، أعطه مباشرة.",
+  "إذا طلب شرحًا، اشرح بطريقة سهلة ومفيدة.",
   "استخدم العربية عندما يكتب المستخدم بالعربية.",
-  "استخدم المصطلحات الإنجليزية عند الحاجة في البرمجة والتقنية."
+  "لا تكرر نفسك ولا تختلق معلومات."
 ].join("\n");
 
 
@@ -26,10 +20,7 @@ function parseSSEBlock(block) {
   let eventType = "";
   let data = "";
 
-  const lines =
-    block.split("\n");
-
-  for (const line of lines) {
+  for (const line of block.split("\n")) {
     if (line.startsWith("event:")) {
       eventType =
         line.slice(6).trim();
@@ -45,19 +36,14 @@ function parseSSEBlock(block) {
     return null;
   }
 
-  let parsed;
-
   try {
-    parsed =
-      JSON.parse(data);
+    return {
+      eventType,
+      data: JSON.parse(data)
+    };
   } catch {
     return null;
   }
-
-  return {
-    eventType,
-    data: parsed
-  };
 }
 
 
@@ -86,7 +72,7 @@ export default async function handler(req, res) {
     const sessionId =
       String(
         body.sessionId || ""
-      );
+      ).trim();
 
     const message =
       String(
@@ -108,7 +94,7 @@ export default async function handler(req, res) {
 
     const payload = {
       model:
-        "gemini-3.6-flash",
+        "gemini-3.5-flash-lite",
 
       input:
         message,
@@ -117,7 +103,15 @@ export default async function handler(req, res) {
         true,
 
       system_instruction:
-        SYSTEM_PROMPT
+        SYSTEM_PROMPT,
+
+      generation_config: {
+        thinking_level:
+          "minimal",
+
+        max_output_tokens:
+          1800
+      }
     };
 
 
@@ -129,10 +123,9 @@ export default async function handler(req, res) {
 
     const response =
       await fetch(
-        "https://generativelanguage.googleapis.com/v1beta/interactions",
+        "https://generativelanguage.googleapis.com/v1beta/interactions?alt=sse",
         {
-          method:
-            "POST",
+          method: "POST",
 
           headers: {
             "x-goog-api-key":
@@ -146,9 +139,7 @@ export default async function handler(req, res) {
           },
 
           body:
-            JSON.stringify(
-              payload
-            )
+            JSON.stringify(payload)
         }
       );
 
@@ -158,7 +149,7 @@ export default async function handler(req, res) {
         await response.text();
 
       console.error(
-        "Gemini REST error:",
+        "Gemini API error:",
         errorText
       );
 
@@ -175,32 +166,27 @@ export default async function handler(req, res) {
     if (!response.body) {
       return res.status(500).json({
         error:
-          "Gemini لم يُرجع Stream."
+          "لم يصل Stream من Gemini."
       });
     }
 
 
-    res.statusCode =
-      200;
-
+    res.statusCode = 200;
 
     res.setHeader(
       "Content-Type",
       "text/plain; charset=utf-8"
     );
 
-
     res.setHeader(
       "Cache-Control",
       "no-cache, no-transform"
     );
 
-
     res.setHeader(
       "Connection",
       "keep-alive"
     );
-
 
     res.setHeader(
       "X-Accel-Buffering",
@@ -219,20 +205,16 @@ export default async function handler(req, res) {
     const reader =
       response.body.getReader();
 
-
     const decoder =
-      new TextDecoder();
+      new TextDecoder("utf-8");
 
 
-    let buffer =
-      "";
+    let buffer = "";
 
 
     while (true) {
-
       const result =
         await reader.read();
-
 
       if (result.done) {
         break;
@@ -256,9 +238,7 @@ export default async function handler(req, res) {
         blocks.pop() || "";
 
 
-      for (
-        const block of blocks
-      ) {
+      for (const block of blocks) {
 
         const event =
           parseSSEBlock(block);
@@ -272,15 +252,12 @@ export default async function handler(req, res) {
         if (
           event.eventType ===
             "step.delta" &&
-          event.data &&
-          event.data.delta &&
-          event.data.delta.type ===
+          event.data?.delta?.type ===
             "text"
         ) {
 
           const text =
-            event.data.delta.text ||
-            "";
+            event.data.delta.text || "";
 
 
           if (text) {
@@ -294,18 +271,14 @@ export default async function handler(req, res) {
             "interaction.completed"
         ) {
 
-          const interaction =
-            event.data.interaction;
+          const interactionId =
+            event.data?.interaction?.id;
 
 
-          if (
-            interaction &&
-            interaction.id
-          ) {
-
+          if (interactionId) {
             sessions.set(
               sessionId,
-              interaction.id
+              interactionId
             );
           }
         }
@@ -319,9 +292,7 @@ export default async function handler(req, res) {
 
 
     if (remaining) {
-
-      buffer +=
-        remaining;
+      buffer += remaining;
     }
 
 
