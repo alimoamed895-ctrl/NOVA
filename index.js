@@ -1,3 +1,4 @@
+
 import express from "express";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -11,6 +12,9 @@ const __filename =
 
 const __dirname =
   path.dirname(__filename);
+
+const publicDir =
+  path.join(__dirname, "public");
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY
@@ -44,50 +48,19 @@ app.use(
   })
 );
 
-/* =========================
-   HOME
-   ========================= */
-
-app.get("/", async (req, res) => {
-  try {
-    const html =
-      await fs.readFile(
-        path.join(
-          __dirname,
-          "index.html"
-        ),
-        "utf8"
-      );
-
-    res
-      .status(200)
-      .type("html")
-      .send(html);
-
-  } catch (error) {
-    console.error(error);
-
-    res
-      .status(500)
-      .send(
-        "Education GPT: فشل تحميل الصفحة."
-      );
-  }
-});
-
-/* =========================
-   LOGIN
-   ========================= */
+app.use(
+  express.static(publicDir)
+);
 
 app.get(
-  "/login.html",
+  "/",
   async (req, res) => {
     try {
       const html =
         await fs.readFile(
           path.join(
-            __dirname,
-            "login.html"
+            publicDir,
+            "index.html"
           ),
           "utf8"
         );
@@ -103,7 +76,7 @@ app.get(
       res
         .status(500)
         .send(
-          "Education GPT: فشل تحميل صفحة تسجيل الدخول."
+          "Education GPT: فشل تحميل الصفحة الرئيسية."
         );
     }
   }
@@ -117,10 +90,6 @@ app.get(
     );
   }
 );
-
-/* =========================
-   CHAT
-   ========================= */
 
 app.post(
   "/api/chat",
@@ -279,39 +248,6 @@ app.post(
 
       res.end();
     }
-  }
-);
-
-/* =========================
-   ERROR HANDLER
-   ========================= */
-
-app.use(
-  (
-    error,
-    req,
-    res,
-    next
-  ) => {
-    console.error(
-      "Express error:",
-      error
-    );
-
-    if (
-      res.headersSent
-    ) {
-      return next(
-        error
-      );
-    }
-
-    res
-      .status(500)
-      .json({
-        error:
-          "حدث خطأ داخلي في Education GPT"
-      });
   }
 );
 
