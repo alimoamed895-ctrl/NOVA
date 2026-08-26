@@ -1,0 +1,710 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>تسجيل الدخول — Education GPT</title>
+
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%237c3aed'/%3E%3Cpath d='M15 35L50 15L85 35L50 55Z' fill='white'/%3E%3Cpath d='M25 42V73H75V42L50 55Z' fill='%2338bdf8'/%3E%3Cpath d='M42 57H58V73H42Z' fill='white'/%3E%3C/svg%3E"
+  >
+
+  <style>
+    :root {
+      --bg: #070a14;
+      --panel: #0e1529;
+      --panel-2: #121b34;
+      --line: #2a3b68;
+      --text: #f7f8ff;
+      --muted: #9eaac7;
+      --purple: #8b5cf6;
+      --blue: #3b82f6;
+      --green: #22c55e;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      min-height: 100vh;
+
+      display: grid;
+      place-items: center;
+
+      padding: 20px;
+
+      font-family:
+        Tahoma,
+        Arial,
+        sans-serif;
+
+      color: var(--text);
+
+      background:
+        radial-gradient(
+          circle at 15% 15%,
+          rgba(139, 92, 246, .28),
+          transparent 32%
+        ),
+        radial-gradient(
+          circle at 85% 85%,
+          rgba(59, 130, 246, .22),
+          transparent 32%
+        ),
+        var(--bg);
+    }
+
+    .page {
+      width: 100%;
+      max-width: 460px;
+    }
+
+    .card {
+      padding: 32px;
+
+      border-radius: 28px;
+
+      background:
+        rgba(14, 21, 41, .96);
+
+      border:
+        1px solid var(--line);
+
+      box-shadow:
+        0 30px 90px rgba(0, 0, 0, .45);
+
+      backdrop-filter: blur(16px);
+    }
+
+    .logo {
+      width: 100px;
+      height: 100px;
+
+      margin: 0 auto 20px;
+
+      border-radius: 30px;
+
+      display: grid;
+      place-items: center;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--purple),
+          var(--blue)
+        );
+
+      box-shadow:
+        0 0 55px
+        rgba(124, 92, 246, .35);
+    }
+
+    .logo svg {
+      width: 64px;
+      height: 64px;
+    }
+
+    h1 {
+      margin: 0;
+
+      text-align: center;
+
+      font-size: 30px;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      margin-bottom: 28px;
+
+      text-align: center;
+
+      color: var(--muted);
+
+      line-height: 1.8;
+    }
+
+    .field {
+      margin-bottom: 17px;
+    }
+
+    label {
+      display: block;
+
+      margin-bottom: 8px;
+
+      color: var(--text);
+
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+
+      padding: 14px 15px;
+
+      border-radius: 14px;
+
+      border: 1px solid var(--line);
+
+      background: #091024;
+
+      color: white;
+
+      outline: none;
+
+      font-size: 15px;
+
+      transition: .2s ease;
+    }
+
+    input:focus {
+      border-color: var(--purple);
+
+      box-shadow:
+        0 0 0 3px
+        rgba(139, 92, 246, .12);
+    }
+
+    .password-row {
+      position: relative;
+    }
+
+    .password-row input {
+      padding-left: 52px;
+    }
+
+    .toggle-password {
+      position: absolute;
+
+      left: 8px;
+      top: 50%;
+
+      transform: translateY(-50%);
+
+      width: 38px;
+      height: 38px;
+
+      border: 0;
+
+      border-radius: 10px;
+
+      background: var(--panel-2);
+
+      color: var(--muted);
+
+      cursor: pointer;
+    }
+
+    .options {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      gap: 10px;
+
+      margin-top: 4px;
+
+      font-size: 12px;
+    }
+
+    .remember {
+      display: flex;
+
+      align-items: center;
+
+      gap: 7px;
+
+      color: var(--muted);
+    }
+
+    .remember input {
+      width: auto;
+      accent-color: var(--purple);
+    }
+
+    .forgot {
+      color: #b7a2ff;
+    }
+
+    .login-button {
+      width: 100%;
+
+      margin-top: 23px;
+
+      padding: 15px;
+
+      border: 0;
+
+      border-radius: 15px;
+
+      color: white;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--purple),
+          var(--blue)
+        );
+
+      font-weight: 800;
+
+      font-size: 15px;
+
+      cursor: pointer;
+
+      transition: .2s ease;
+    }
+
+    .login-button:hover {
+      transform: translateY(-1px);
+
+      filter: brightness(1.07);
+    }
+
+    .login-button:disabled {
+      opacity: .6;
+
+      cursor: wait;
+
+      transform: none;
+    }
+
+    .divider {
+      display: flex;
+
+      align-items: center;
+
+      gap: 12px;
+
+      margin: 23px 0;
+
+      color: var(--muted);
+
+      font-size: 12px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+
+      height: 1px;
+
+      flex: 1;
+
+      background: var(--line);
+    }
+
+    .guest-button {
+      width: 100%;
+
+      padding: 13px;
+
+      border-radius: 14px;
+
+      border: 1px solid var(--line);
+
+      background: var(--panel-2);
+
+      color: var(--text);
+
+      cursor: pointer;
+    }
+
+    .guest-button:hover {
+      border-color: var(--purple);
+    }
+
+    .back {
+      display: block;
+
+      margin-top: 18px;
+
+      text-align: center;
+
+      color: var(--muted);
+
+      font-size: 13px;
+    }
+
+    .message {
+      min-height: 20px;
+
+      margin-top: 13px;
+
+      text-align: center;
+
+      font-size: 13px;
+
+      color: #fca5a5;
+    }
+
+    .footer {
+      margin-top: 18px;
+
+      text-align: center;
+
+      color: var(--muted);
+
+      opacity: .8;
+
+      font-size: 11px;
+    }
+
+    @media (max-width: 520px) {
+      .card {
+        padding: 24px 18px;
+        border-radius: 23px;
+      }
+
+      .logo {
+        width: 88px;
+        height: 88px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page">
+
+    <div class="card">
+
+      <div class="logo">
+        <svg viewBox="0 0 100 100">
+          <path
+            d="M15 35L50 15L85 35L50 55Z"
+            fill="white"
+          />
+
+          <path
+            d="M25 42V73H75V42L50 55Z"
+            fill="#38bdf8"
+          />
+
+          <path
+            d="M42 57H58V73H42Z"
+            fill="white"
+          />
+        </svg>
+      </div>
+
+      <h1>
+        تسجيل الدخول
+      </h1>
+
+      <div class="subtitle">
+        ادخل إلى حسابك في
+        <strong>Education GPT</strong>
+        <br>
+        Your Smart Study Companion
+      </div>
+
+      <form id="loginForm">
+
+        <div class="field">
+
+          <label for="email">
+            البريد الإلكتروني
+          </label>
+
+          <input
+            id="email"
+            type="email"
+            autocomplete="email"
+            placeholder="example@email.com"
+            required
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label for="password">
+            كلمة المرور
+          </label>
+
+          <div class="password-row">
+
+            <input
+              id="password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="••••••••"
+              minlength="6"
+              required
+            >
+
+            <button
+              id="togglePassword"
+              class="toggle-password"
+              type="button"
+              aria-label="إظهار كلمة المرور"
+            >
+              👁
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="options">
+
+          <label class="remember">
+
+            <input
+              id="remember"
+              type="checkbox"
+            >
+
+            تذكرني
+
+          </label>
+
+          <a
+            class="forgot"
+            href="#"
+            id="forgotPassword"
+          >
+            نسيت كلمة المرور؟
+          </a>
+
+        </div>
+
+        <button
+          id="loginButton"
+          class="login-button"
+          type="submit"
+        >
+          تسجيل الدخول
+        </button>
+
+      </form>
+
+      <div
+        id="message"
+        class="message"
+      ></div>
+
+      <div class="divider">
+        أو
+      </div>
+
+      <button
+        id="guestButton"
+        class="guest-button"
+        type="button"
+      >
+        الدخول كزائر
+      </button>
+
+      <a
+        class="back"
+        href="/"
+      >
+        ← العودة إلى Education GPT
+      </a>
+
+    </div>
+
+    <div class="footer">
+      Education GPT © 2026
+    </div>
+
+  </div>
+
+
+  <script>
+
+    const form =
+      document.getElementById(
+        "loginForm"
+      );
+
+    const email =
+      document.getElementById(
+        "email"
+      );
+
+    const password =
+      document.getElementById(
+        "password"
+      );
+
+    const loginButton =
+      document.getElementById(
+        "loginButton"
+      );
+
+    const message =
+      document.getElementById(
+        "message"
+      );
+
+    const guestButton =
+      document.getElementById(
+        "guestButton"
+      );
+
+    const togglePassword =
+      document.getElementById(
+        "togglePassword"
+      );
+
+    const forgotPassword =
+      document.getElementById(
+        "forgotPassword"
+      );
+
+
+    togglePassword.addEventListener(
+      "click",
+      () => {
+
+        const isPassword =
+          password.type === "password";
+
+        password.type =
+          isPassword
+            ? "text"
+            : "password";
+
+        togglePassword.textContent =
+          isPassword
+            ? "🙈"
+            : "👁";
+
+      }
+    );
+
+
+    form.addEventListener(
+      "submit",
+      (event) => {
+
+        event.preventDefault();
+
+        message.textContent = "";
+
+        const emailValue =
+          email.value.trim();
+
+        const passwordValue =
+          password.value;
+
+        if (!emailValue) {
+
+          message.textContent =
+            "اكتب البريد الإلكتروني.";
+
+          return;
+        }
+
+        if (
+          passwordValue.length < 6
+        ) {
+
+          message.textContent =
+            "كلمة المرور يجب أن تكون 6 أحرف على الأقل.";
+
+          return;
+        }
+
+        /*
+          حاليًا هذه واجهة تسجيل دخول تجريبية فقط.
+          لم نربط قاعدة بيانات أو نظام Authentication حقيقي بعد.
+        */
+
+        loginButton.disabled = true;
+
+        loginButton.textContent =
+          "جارٍ تسجيل الدخول...";
+
+        localStorage.setItem(
+          "education_gpt_user",
+          emailValue
+        );
+
+        if (
+          document.getElementById(
+            "remember"
+          ).checked
+        ) {
+
+          localStorage.setItem(
+            "education_gpt_remember",
+            "true"
+          );
+
+        }
+
+        setTimeout(
+          () => {
+
+            window.location.href = "/";
+
+          },
+          500
+        );
+
+      }
+    );
+
+
+    guestButton.addEventListener(
+      "click",
+      () => {
+
+        localStorage.setItem(
+          "education_gpt_guest",
+          "true"
+        );
+
+        window.location.href =
+          "/";
+
+      }
+    );
+
+
+    forgotPassword.addEventListener(
+      "click",
+      (event) => {
+
+        event.preventDefault();
+
+        message.style.color =
+          "#fcd34d";
+
+        message.textContent =
+          "استرجاع كلمة المرور سيتم ربطه بنظام الحسابات الحقيقي لاحقًا.";
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
