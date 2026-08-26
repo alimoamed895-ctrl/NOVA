@@ -1,4 +1,4 @@
-
+```javascript
 import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({
@@ -12,46 +12,37 @@ globalThis.__EDUCATION_GPT_SESSIONS = sessions;
 
 const SYSTEM_PROMPT = [
   "أنت Education GPT، مساعد ذكاء اصطناعي عام وشامل وسريع وذكي.",
-  "",
-  "ساعد المستخدم في التعليم، البرمجة، الكتابة، التلخيص، الترجمة، التخطيط،",
-  "المحادثة العامة، المشاريع، تطوير المواقع، الألعاب، حل المشكلات، والعصف الذهني.",
-  "",
-  "أنت لست مدرسًا فقط.",
-  "إذا طلب المستخدم البرمجة، تصرف كمبرمج ومهندس برمجيات.",
-  "إذا طلب الكتابة، اكتب النص المطلوب مباشرة وبأسلوب مناسب.",
-  "إذا طلب التعليم، اشرح خطوة بخطوة وبأمثلة.",
-  "إذا طلب فكرة مشروع أو لعبة، ساعده في تحويلها إلى خطوات وكود عملي.",
-  "",
+  "ساعد في التعليم، الكتابة، البرمجة، المشاريع، الألعاب، التخطيط، التلخيص، الترجمة، والمحادثة العامة.",
   "تحدث بشكل طبيعي وبشري.",
-  "افهم سياق المحادثة الحالية وتذكر ما قيل سابقًا.",
-  "لا تعطِ إجابات قصيرة بشكل مبالغ فيه.",
-  "لا تكرر نفسك.",
+  "افهم سياق المحادثة الحالية.",
+  "قدّم إجابة كاملة ومباشرة بدون إطالة غير ضرورية.",
+  "عند البرمجة، اكتب كودًا واضحًا وقابلًا للاستخدام.",
+  "عند التعليم، اشرح خطوة بخطوة وبأمثلة.",
+  "عند الكتابة، اكتب النص المطلوب مباشرة.",
   "إذا كانت المعلومات ناقصة، اسأل سؤال متابعة بدل التخمين.",
-  "إذا أخطأ المستخدم، صححه بلطف واشرح السبب.",
   "لا تختلق معلومات.",
-  "استخدم العربية عندما يكتب المستخدم بالعربية.",
-  "استخدم المصطلحات الإنجليزية عند الحاجة في البرمجة والتقنية.",
-  "لا تدّعي أنك نفذت شيئًا لم تنفذه فعليًا."
+  "استخدم العربية عندما يكتب المستخدم بالعربية."
 ].join("\n");
 
-function isTemporaryError(error) {
-  const message =
-    String(error && error.message ? error.message : "").toLowerCase();
+function temporaryError(error) {
+  const msg =
+    String(error?.message || "").toLowerCase();
 
   return (
-    message.includes("503") ||
-    message.includes("unavailable") ||
-    message.includes("high demand") ||
-    message.includes("overloaded") ||
-    message.includes("temporarily")
+    msg.includes("503") ||
+    msg.includes("unavailable") ||
+    msg.includes("high demand") ||
+    msg.includes("overloaded") ||
+    msg.includes("temporarily")
   );
 }
 
-function getHistory(sessionId, message) {
-  const previous = sessions.get(sessionId) || [];
+function buildHistory(sessionId, message) {
+  const oldHistory =
+    sessions.get(sessionId) || [];
 
   return [
-    ...previous,
+    ...oldHistory,
     {
       role: "user",
       parts: [
@@ -60,16 +51,20 @@ function getHistory(sessionId, message) {
         }
       ]
     }
-  ].slice(-20);
+  ].slice(-12);
 }
 
-async function createMainStream(history) {
+async function primary(history) {
   return ai.models.generateContentStream({
     model: "gemini-3.7-flash",
+
     contents: history,
+
     config: {
       systemInstruction: SYSTEM_PROMPT,
-      maxOutputTokens: 3000,
+
+      maxOutputTokens: 2200,
+
       thinkingConfig: {
         thinkingLevel: "low"
       }
@@ -77,13 +72,15 @@ async function createMainStream(history) {
   });
 }
 
-async function createFallbackStream(history) {
+async function fallback(history) {
   return ai.models.generateContentStream({
     model: "gemini-3.5-flash-lite",
+
     contents: history,
+
     config: {
       systemInstruction: SYSTEM_PROMPT,
-      maxOutputTokens: 2200
+      maxOutputTokens: 1800
     }
   });
 }
@@ -113,21 +110,23 @@ export default async function handler(req, res) {
       });
     }
 
-    const history = getHistory(
-      sessionId,
-      message
-    );
+    const history =
+      buildHistory(
+        sessionId,
+        message
+      );
 
     let stream;
 
     try {
-      stream = await createMainStream(history);
+      stream = await primary(history);
     } catch (error) {
-      if (!isTemporaryError(error)) {
+      if (!temporaryError(error)) {
         throw error;
       }
 
-      stream = await createFallbackStream(history);
+      stream =
+        await fallback(history);
     }
 
     res.statusCode = 200;
@@ -147,16 +146,17 @@ export default async function handler(req, res) {
       "no"
     );
 
-    if (typeof res.flushHeaders === "function") {
+    if (
+      typeof res.flushHeaders === "function"
+    ) {
       res.flushHeaders();
     }
 
     let fullAnswer = "";
 
     for await (const chunk of stream) {
-      const text = chunk && chunk.text
-        ? chunk.text
-        : "";
+      const text =
+        chunk?.text || "";
 
       if (!text) {
         continue;
@@ -180,24 +180,24 @@ export default async function handler(req, res) {
 
     sessions.set(
       sessionId,
-      history.slice(-20)
+      history.slice(-12)
     );
 
   } catch (error) {
     console.error(
-      "Education GPT runtime error:",
+      "Education GPT error:",
       error
     );
 
     if (!res.headersSent) {
       return res.status(500).json({
         error:
-          error && error.message
-            ? error.message
-            : "حدث خطأ أثناء تشغيل Education GPT"
+          error?.message ||
+          "حدث خطأ أثناء تشغيل Education GPT"
       });
     }
 
     res.end();
   }
 }
+```
