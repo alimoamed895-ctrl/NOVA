@@ -1,314 +1,336 @@
-<!doctype html>
+```html
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Education GPT — Your Smart Study Companion</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Education GPT</title>
+
+  <!-- Favicon -->
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%237c3aed'/%3E%3Cpath d='M16 38L50 18L84 38L50 58Z' fill='white'/%3E%3Cpath d='M27 44V72H73V44L50 58Z' fill='%2338bdf8'/%3E%3Cpath d='M43 58H57V72H43Z' fill='white'/%3E%3C/svg%3E"
+  />
 
   <style>
-    :root {
-      --bg: #060914;
-      --panel: #0e1630;
-      --panel-2: #121c3d;
-      --line: #293b72;
-      --text: #f5f7ff;
-      --muted: #aab5d1;
-      --purple: #8b5cf6;
-      --blue: #3b82f6;
-      --green: #22c55e;
+    :root{
+      --bg:#070a14;
+      --panel:#0e1426;
+      --panel2:#121a31;
+      --line:#27345c;
+      --text:#f4f7ff;
+      --muted:#aab5d1;
+      --purple:#8b5cf6;
+      --blue:#3b82f6;
+      --green:#22c55e;
     }
 
-    * {
-      box-sizing: border-box;
+    *{
+      box-sizing:border-box;
     }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: Tahoma, Arial, sans-serif;
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:Tahoma,Arial,sans-serif;
       background:
-        radial-gradient(circle at 80% 0%, #2b1466 0, transparent 32%),
-        radial-gradient(circle at 10% 100%, #102a63 0, transparent 30%),
+        radial-gradient(circle at 85% 0%,#2b1560 0,transparent 30%),
+        radial-gradient(circle at 5% 100%,#102d67 0,transparent 28%),
         var(--bg);
-      color: var(--text);
+      color:var(--text);
     }
 
-    .app {
-      height: 100vh;
-      display: flex;
-      overflow: hidden;
+    button,textarea{
+      font:inherit;
     }
 
-    .sidebar {
-      width: 295px;
-      background: rgba(9, 14, 31, 0.94);
-      border-left: 1px solid var(--line);
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
+    button{
+      cursor:pointer;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding-bottom: 10px;
+    .app{
+      height:100vh;
+      display:flex;
+      overflow:hidden;
     }
 
-    .logo {
-      width: 58px;
-      height: 58px;
-      border-radius: 19px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, var(--purple), var(--blue));
-      font-size: 30px;
-      box-shadow: 0 0 35px rgba(124, 92, 246, .35);
+    /* Sidebar */
+    .sidebar{
+      width:290px;
+      padding:18px;
+      background:rgba(8,12,27,.96);
+      border-left:1px solid var(--line);
+      display:flex;
+      flex-direction:column;
+      gap:14px;
     }
 
-    .brand h1 {
-      margin: 0;
-      font-size: 22px;
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
     }
 
-    .brand span {
-      color: var(--muted);
-      font-size: 12px;
+    .brand-logo{
+      width:58px;
+      height:58px;
+      border-radius:18px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,var(--purple),var(--blue));
+      box-shadow:0 0 35px rgba(124,92,246,.35);
     }
 
-    button {
-      font: inherit;
-      cursor: pointer;
+    .brand-logo svg{
+      width:38px;
+      height:38px;
     }
 
-    .new-chat,
-    .quick {
-      border-radius: 15px;
-      padding: 13px;
-      color: white;
+    .brand-title{
+      font-size:21px;
+      font-weight:bold;
     }
 
-    .new-chat {
-      border: 0;
-      font-weight: bold;
-      background: linear-gradient(135deg, var(--purple), var(--blue));
+    .brand-subtitle{
+      color:var(--muted);
+      font-size:11px;
+      margin-top:4px;
     }
 
-    .status {
-      border: 1px solid #1e7450;
-      background: #0c2924;
-      color: #80f2c3;
-      border-radius: 15px;
-      padding: 13px;
-      line-height: 1.7;
-      font-size: 13px;
+    .new-chat{
+      border:0;
+      color:#fff;
+      padding:13px;
+      border-radius:14px;
+      font-weight:bold;
+      background:linear-gradient(135deg,var(--purple),var(--blue));
     }
 
-    .quick {
-      border: 1px solid var(--line);
-      background: var(--panel);
-      text-align: right;
+    .status{
+      padding:12px;
+      border-radius:14px;
+      color:#86efac;
+      background:#0b261e;
+      border:1px solid #1c6547;
+      font-size:13px;
+      line-height:1.7;
     }
 
-    .quick:hover {
-      border-color: var(--purple);
+    .section-title{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:5px;
     }
 
-    .subjects-title {
-      color: var(--muted);
-      font-size: 13px;
-      margin-top: 4px;
+    .quick{
+      width:100%;
+      padding:12px;
+      text-align:right;
+      color:#fff;
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:13px;
     }
 
-    .subjects {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
+    .quick:hover{
+      border-color:var(--purple);
     }
 
-    .subject {
-      border: 1px solid var(--line);
-      background: #101a37;
-      color: white;
-      border-radius: 14px;
-      padding: 10px 8px;
-      font-size: 12px;
+    .subjects{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
     }
 
-    .main {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
+    .subject{
+      border:1px solid var(--line);
+      background:#101a33;
+      color:#fff;
+      border-radius:12px;
+      padding:10px 7px;
+      font-size:12px;
     }
 
-    .topbar {
-      height: 72px;
-      border-bottom: 1px solid var(--line);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-      background: rgba(7, 12, 27, .8);
+    /* Main */
+    .main{
+      flex:1;
+      min-width:0;
+      display:flex;
+      flex-direction:column;
     }
 
-    .top-title {
-      font-weight: bold;
-      font-size: 18px;
+    .topbar{
+      height:70px;
+      padding:0 24px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      background:rgba(8,12,27,.82);
+      border-bottom:1px solid var(--line);
     }
 
-    .online {
-      color: #4ade80;
-      font-size: 13px;
+    .topbar-title{
+      font-size:18px;
+      font-weight:bold;
     }
 
-    .chat {
-      flex: 1;
-      overflow-y: auto;
-      padding: 28px max(18px, calc((100% - 920px) / 2));
+    .online{
+      color:#4ade80;
+      font-size:13px;
     }
 
-    .welcome {
-      text-align: center;
-      margin: 60px auto 28px;
+    .chat{
+      flex:1;
+      overflow-y:auto;
+      padding:28px max(18px,calc((100% - 920px)/2));
     }
 
-    .welcome-logo {
-      width: 96px;
-      height: 96px;
-      margin: auto;
-      border-radius: 30px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, var(--purple), var(--blue));
-      font-size: 48px;
-      box-shadow: 0 0 50px rgba(93, 65, 220, .4);
+    .welcome{
+      text-align:center;
+      max-width:700px;
+      margin:70px auto 30px;
     }
 
-    .welcome h2 {
-      font-size: 31px;
-      margin: 16px 0 8px;
+    .welcome-logo{
+      width:95px;
+      height:95px;
+      margin:auto;
+      border-radius:29px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,var(--purple),var(--blue));
+      box-shadow:0 0 55px rgba(100,75,230,.35);
     }
 
-    .welcome p {
-      color: var(--muted);
-      line-height: 1.9;
+    .welcome-logo svg{
+      width:62px;
+      height:62px;
     }
 
-    .message {
-      display: flex;
-      gap: 10px;
-      margin: 18px 0;
-      align-items: flex-start;
+    .welcome h1{
+      margin:17px 0 8px;
+      font-size:32px;
     }
 
-    .message.user {
-      flex-direction: row-reverse;
+    .welcome p{
+      color:var(--muted);
+      line-height:1.9;
+      margin:0;
     }
 
-    .avatar {
-      width: 42px;
-      height: 42px;
-      flex: none;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, var(--purple), var(--blue));
-      font-size: 21px;
+    .message{
+      display:flex;
+      gap:10px;
+      margin:18px 0;
+      align-items:flex-start;
     }
 
-    .message.user .avatar {
-      background: #3d4962;
-      font-size: 16px;
+    .message.user{
+      flex-direction:row-reverse;
     }
 
-    .bubble {
-      max-width: 82%;
-      padding: 14px 17px;
-      border-radius: 19px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      line-height: 1.95;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
+    .avatar{
+      width:42px;
+      height:42px;
+      flex:none;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,var(--purple),var(--blue));
+      font-size:19px;
     }
 
-    .message.user .bubble {
-      background: #302466;
-      border-color: #5c47ae;
+    .user .avatar{
+      background:#39445c;
+      font-size:13px;
     }
 
-    .typing {
-      display: none;
-      color: var(--muted);
-      padding: 8px 4px;
-      font-size: 13px;
+    .bubble{
+      max-width:84%;
+      padding:14px 17px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:var(--panel);
+      line-height:1.95;
+      white-space:pre-wrap;
+      overflow-wrap:anywhere;
     }
 
-    .composer-wrap {
-      border-top: 1px solid var(--line);
-      background: rgba(7, 12, 27, .92);
-      padding: 15px max(18px, calc((100% - 920px) / 2));
+    .user .bubble{
+      background:#30255f;
+      border-color:#55469f;
     }
 
-    .composer {
-      display: flex;
-      gap: 10px;
-      align-items: flex-end;
-      padding: 9px;
-      border-radius: 19px;
-      background: var(--panel);
-      border: 1px solid var(--line);
+    .typing{
+      display:none;
+      color:var(--muted);
+      padding:8px 2px;
+      font-size:13px;
     }
 
-    textarea {
-      flex: 1;
-      min-height: 48px;
-      max-height: 150px;
-      resize: none;
-      border: 0;
-      outline: 0;
-      background: transparent;
-      color: white;
-      padding: 11px;
-      font: inherit;
-      line-height: 1.6;
+    .composer-wrap{
+      padding:14px max(18px,calc((100% - 920px)/2));
+      border-top:1px solid var(--line);
+      background:rgba(6,10,22,.95);
     }
 
-    .send {
-      width: 54px;
-      height: 54px;
-      border: 0;
-      border-radius: 15px;
-      background: linear-gradient(135deg, var(--purple), var(--blue));
-      color: white;
-      font-size: 22px;
+    .composer{
+      display:flex;
+      gap:10px;
+      align-items:flex-end;
+      padding:9px;
+      border-radius:18px;
+      background:var(--panel);
+      border:1px solid var(--line);
     }
 
-    .send:disabled {
-      opacity: .5;
-      cursor: not-allowed;
+    textarea{
+      flex:1;
+      min-height:48px;
+      max-height:150px;
+      resize:none;
+      border:0;
+      outline:0;
+      padding:11px;
+      background:transparent;
+      color:#fff;
+      line-height:1.6;
     }
 
-    .note {
-      text-align: center;
-      color: #697596;
-      font-size: 11px;
-      margin-top: 7px;
+    .send{
+      width:54px;
+      height:54px;
+      border:0;
+      border-radius:15px;
+      color:#fff;
+      background:linear-gradient(135deg,var(--purple),var(--blue));
+      font-size:21px;
     }
 
-    @media (max-width: 760px) {
-      .sidebar {
-        display: none;
+    .send:disabled{
+      opacity:.5;
+    }
+
+    .note{
+      margin-top:7px;
+      text-align:center;
+      color:#6f7b99;
+      font-size:10px;
+    }
+
+    @media(max-width:760px){
+      .sidebar{
+        display:none;
       }
 
-      .topbar {
-        padding: 0 15px;
+      .topbar{
+        padding:0 15px;
       }
 
-      .bubble {
-        max-width: 91%;
+      .bubble{
+        max-width:91%;
       }
     }
   </style>
@@ -321,35 +343,42 @@
   <aside class="sidebar">
 
     <div class="brand">
-      <div class="logo">📚</div>
-      <div>
-        <h1>Education GPT</h1>
-        <span>Your Smart Study Companion</span>
+
+      <div class="brand-logo">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <path d="M15 35L50 15L85 35L50 55Z" fill="white"/>
+          <path d="M25 42V73H75V42L50 55Z" fill="#38bdf8"/>
+          <path d="M42 57H58V73H42Z" fill="white"/>
+        </svg>
       </div>
+
+      <div>
+        <div class="brand-title">Education GPT</div>
+        <div class="brand-subtitle">Your Smart Study Companion</div>
+      </div>
+
     </div>
 
-    <button id="newChat" class="new-chat">
+    <button class="new-chat" id="newChat">
       ＋ محادثة جديدة
     </button>
 
     <div class="status">
       🟢 <b>AI Online</b><br>
-      Gemini يعمل الآن
+      Education GPT جاهز للمساعدة
     </div>
 
-    <div class="subjects-title">
-      أدوات سريعة
-    </div>
+    <div class="section-title">أدوات سريعة</div>
 
-    <button class="quick" data-q="اشرح لي درسًا بطريقة بسيطة ثم اختبرني">
+    <button class="quick" data-q="اشرح لي هذا الدرس بطريقة سهلة ثم اختبرني">
       ⚡ اشرح واختبرني
     </button>
 
-    <button class="quick" data-q="لخص لي هذا الموضوع بطريقة سهلة للحفظ">
-      📄 لخص الموضوع
+    <button class="quick" data-q="لخص لي الموضوع بطريقة سهلة للحفظ">
+      📚 لخص الموضوع
     </button>
 
-    <button class="quick" data-q="اختبرني في هذا الموضوع سؤالاً سؤالاً">
+    <button class="quick" data-q="اختبرني سؤالًا سؤالًا في هذا الموضوع">
       ✅ اختبرني
     </button>
 
@@ -357,16 +386,14 @@
       📅 خطة مذاكرة
     </button>
 
-    <div class="subjects-title">
-      المواد الشائعة
-    </div>
+    <div class="section-title">المواد</div>
 
     <div class="subjects">
       <button class="subject" data-q="ساعدني في الرياضيات">➗ الرياضيات</button>
-      <button class="subject" data-q="ساعدني في العلوم">🧪 العلوم</button>
+      <button class="subject" data-q="ساعدني في الفيزياء">⚡ الفيزياء</button>
+      <button class="subject" data-q="ساعدني في الكيمياء">🧪 الكيمياء</button>
       <button class="subject" data-q="ساعدني في اللغة العربية">📖 العربية</button>
       <button class="subject" data-q="ساعدني في الإنجليزي">🌍 الإنجليزي</button>
-      <button class="subject" data-q="ساعدني في التاريخ">🏛️ التاريخ</button>
       <button class="subject" data-q="ساعدني في البرمجة">💻 البرمجة</button>
     </div>
 
@@ -375,26 +402,23 @@
   <main class="main">
 
     <header class="topbar">
-      <div class="top-title">
-        ✨ Education GPT
-      </div>
-
-      <div class="online">
-        ● متصلة الآن
-      </div>
+      <div class="topbar-title">Education GPT ✨</div>
+      <div class="online">● متصلة الآن</div>
     </header>
 
-    <section id="chat" class="chat">
+    <section class="chat" id="chat">
 
-      <div id="welcome" class="welcome">
+      <div class="welcome" id="welcome">
 
         <div class="welcome-logo">
-          📚
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <path d="M15 35L50 15L85 35L50 55Z" fill="white"/>
+            <path d="M25 42V73H75V42L50 55Z" fill="#38bdf8"/>
+            <path d="M42 57H58V73H42Z" fill="white"/>
+          </svg>
         </div>
 
-        <h2>
-          أهلًا بك في Education GPT ✨
-        </h2>
+        <h1>أهلًا بك في Education GPT ✨</h1>
 
         <p>
           مساعدك التعليمي الذكي.<br>
@@ -403,7 +427,7 @@
 
       </div>
 
-      <div id="typing" class="typing">
+      <div class="typing" id="typing">
         ✨ Education GPT يكتب...
       </div>
 
@@ -437,11 +461,11 @@
 <script>
 
 const sessionId =
-  localStorage.getItem("education_gpt_sid")
+  localStorage.getItem("education_gpt_session")
   || crypto.randomUUID();
 
 localStorage.setItem(
-  "education_gpt_sid",
+  "education_gpt_session",
   sessionId
 );
 
@@ -458,7 +482,7 @@ const typing =
   document.getElementById("typing");
 
 
-function addMessage(text, user = false) {
+function addMessage(text, user = false){
 
   document.getElementById("welcome")?.remove();
 
@@ -483,72 +507,70 @@ function addMessage(text, user = false) {
 
   bubble.textContent = text;
 
-  row.appendChild(avatar);
-  row.appendChild(bubble);
+  row.append(avatar,bubble);
 
-  chat.insertBefore(row, typing);
+  chat.insertBefore(row,typing);
 
-  chat.scrollTop = chat.scrollHeight;
+  chat.scrollTop =
+    chat.scrollHeight;
 
   return bubble;
 }
 
 
-async function sendMessage() {
+async function sendMessage(){
 
   const message =
     input.value.trim();
 
-  if (!message || send.disabled) {
+  if(!message || send.disabled){
     return;
   }
 
-  addMessage(message, true);
+  addMessage(message,true);
 
   input.value = "";
   input.style.height = "48px";
 
   send.disabled = true;
-
   typing.style.display = "block";
 
-  try {
+  try{
 
     const response =
-      await fetch("/api/chat", {
-        method: "POST",
+      await fetch("/api/chat",{
+        method:"POST",
 
-        headers: {
-          "Content-Type": "application/json"
+        headers:{
+          "Content-Type":
+            "application/json"
         },
 
-        body: JSON.stringify({
+        body:JSON.stringify({
           sessionId,
           message
         })
       });
 
-    if (!response.ok) {
+    if(!response.ok){
 
       const errorText =
         await response.text();
 
       throw new Error(
-        errorText || "حدث خطأ في الاتصال"
+        errorText ||
+        "حدث خطأ أثناء الاتصال"
       );
     }
-
 
     document
       .getElementById("welcome")
       ?.remove();
 
-
     const row =
       document.createElement("div");
 
     row.className = "message";
-
 
     const avatar =
       document.createElement("div");
@@ -557,22 +579,16 @@ async function sendMessage() {
 
     avatar.textContent = "📚";
 
-
     const bubble =
       document.createElement("div");
 
     bubble.className = "bubble";
 
+    row.append(avatar,bubble);
 
-    row.appendChild(avatar);
-    row.appendChild(bubble);
-
-
-    chat.insertBefore(row, typing);
-
+    chat.insertBefore(row,typing);
 
     typing.style.display = "none";
-
 
     const reader =
       response.body.getReader();
@@ -580,52 +596,45 @@ async function sendMessage() {
     const decoder =
       new TextDecoder();
 
-
     let fullText = "";
 
+    while(true){
 
-    while (true) {
-
-      const { value, done } =
+      const {value,done} =
         await reader.read();
 
-      if (done) {
+      if(done){
         break;
       }
-
 
       const chunk =
         decoder.decode(
           value,
-          { stream: true }
+          {stream:true}
         );
-
 
       fullText += chunk;
 
       bubble.textContent =
         fullText;
 
-
       chat.scrollTop =
         chat.scrollHeight;
-
     }
 
-  } catch (error) {
+  }catch(error){
 
     typing.style.display = "none";
 
     addMessage(
-      "حدث خطأ: " + error.message
+      "حدث خطأ: " +
+      error.message
     );
 
-  } finally {
+  }finally{
 
     typing.style.display = "none";
-
     send.disabled = false;
-
     input.focus();
 
   }
@@ -640,17 +649,16 @@ send.addEventListener(
 
 input.addEventListener(
   "keydown",
-  event => {
+  e => {
 
-    if (
-      event.key === "Enter" &&
-      !event.shiftKey
-    ) {
+    if(
+      e.key === "Enter" &&
+      !e.shiftKey
+    ){
 
-      event.preventDefault();
+      e.preventDefault();
 
       sendMessage();
-
     }
 
   }
@@ -675,9 +683,7 @@ input.addEventListener(
 
 
 document
-  .querySelectorAll(
-    ".quick, .subject"
-  )
+  .querySelectorAll(".quick,.subject")
   .forEach(button => {
 
     button.addEventListener(
@@ -699,30 +705,10 @@ document
   .getElementById("newChat")
   .addEventListener(
     "click",
-    async () => {
-
-      try {
-
-        await fetch(
-          "/api/new-chat",
-          {
-            method: "POST",
-
-            headers: {
-              "Content-Type":
-                "application/json"
-            },
-
-            body: JSON.stringify({
-              sessionId
-            })
-          }
-        );
-
-      } catch (_) {}
+    () => {
 
       localStorage.setItem(
-        "education_gpt_sid",
+        "education_gpt_session",
         crypto.randomUUID()
       );
 
@@ -735,3 +721,4 @@ document
 
 </body>
 </html>
+```
