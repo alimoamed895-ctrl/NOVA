@@ -1,2 +1,2 @@
-// Education GPT now uses Vercel Functions in /api.
-// This file is intentionally kept for compatibility with the old project structure.
+// Education GPT chat endpoint is now handled by /api/chat.js.
+// This file is intentionally kept for compatibility.
