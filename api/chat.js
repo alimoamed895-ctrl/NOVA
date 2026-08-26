@@ -1,4 +1,4 @@
-```javascript id="1h8pkh"
+
 import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({
@@ -201,4 +201,3 @@ export default async function handler(req, res) {
     res.end();
   }
 }
-```
