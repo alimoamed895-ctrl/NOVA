@@ -1,54 +1,1643 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NOVA — Your Smart Companion</title>
-<style>
-:root{--bg:#080b18;--panel:#11182b;--panel2:#171f38;--text:#f7f8ff;--muted:#aab3ca;--line:#293654;--a:#9b5cff;--b:#37c9e8}
-*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial,sans-serif;background:radial-gradient(circle at 80% 0,#241652 0,#080b18 48%);color:var(--text)}
-.app{height:100vh;display:flex}.side{width:285px;background:#0c1122ee;border-left:1px solid var(--line);padding:18px;display:flex;flex-direction:column;gap:14px}
-.brand{display:flex;align-items:center;gap:11px}.logo{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--a),var(--b));font-weight:bold;font-size:23px;box-shadow:0 0 35px #8b5cff55}.brand h1{margin:0}.brand small,.muted{color:var(--muted)}
-button{font:inherit;cursor:pointer}.new,.quick{padding:12px;border-radius:14px;color:var(--text)}.new{border:0;background:linear-gradient(135deg,var(--a),#6c68ff);font-weight:bold}.quick{background:var(--panel);border:1px solid var(--line);text-align:right}.quick:hover{border-color:var(--a)}
-.free{padding:11px;border:1px solid #245444;background:#0e2524;border-radius:14px;color:#8ff0d2;font-size:13px;line-height:1.7}
-.main{flex:1;display:flex;flex-direction:column;min-width:0}.top{height:72px;padding:0 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);background:#0b102299}.online{color:#53e0bb;font-size:13px}
-.chat{flex:1;overflow:auto;padding:28px max(18px,calc((100% - 900px)/2))}.welcome{text-align:center;margin:65px auto 25px}.orb{width:92px;height:92px;margin:auto;display:grid;place-items:center;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--b));font-size:32px;font-weight:bold;box-shadow:0 0 55px #8b5cff66}.welcome h2{font-size:30px;margin:15px 0 8px}.welcome p{color:var(--muted);line-height:1.9}
-.message{display:flex;gap:10px;margin:18px 0;align-items:flex-start}.message.user{flex-direction:row-reverse}.avatar{width:40px;height:40px;flex:none;border-radius:13px;background:linear-gradient(135deg,var(--a),var(--b));display:grid;place-items:center;font-weight:bold}.user .avatar{background:#3e4961}
-.bubble{max-width:82%;padding:14px 17px;background:var(--panel);border:1px solid var(--line);border-radius:18px;line-height:1.95;white-space:pre-wrap}.user .bubble{background:#312660;border-color:#5646a3}.typing{display:none;color:var(--muted);padding:10px}
-.bottom{padding:15px max(18px,calc((100% - 900px)/2));border-top:1px solid var(--line);background:#090d1bcc}.inputbox{display:flex;gap:9px;background:var(--panel);padding:9px;border:1px solid var(--line);border-radius:18px}
-textarea{flex:1;min-height:46px;max-height:140px;resize:none;border:0;outline:0;background:transparent;color:#fff;padding:10px;font:inherit}.send{width:52px;border:0;border-radius:13px;background:linear-gradient(135deg,var(--a),#6c68ff);color:white;font-size:20px}.send:disabled{opacity:.5}
-.note{text-align:center;color:var(--muted);font-size:11px;margin-top:7px}
-@media(max-width:760px){.side{display:none}.bubble{max-width:90%}.top{padding:0 15px}}
-</style>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Education GPT</title>
+
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%237c3aed'/%3E%3Cpath d='M12 37L50 15L88 37L50 59Z' fill='white'/%3E%3Cpath d='M25 44V78H75V44L50 59Z' fill='%2338bdf8'/%3E%3Cpath d='M41 58H59V78H41Z' fill='white'/%3E%3C/svg%3E"
+  >
+
+  <style>
+    :root {
+      --bg: #070a14;
+      --panel: #0e1529;
+      --panel-2: #121b34;
+      --line: #293965;
+      --text: #f7f8ff;
+      --muted: #9eabc9;
+      --purple: #8b5cf6;
+      --blue: #3b82f6;
+      --green: #22c55e;
+      --red: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      overflow: hidden;
+
+      font-family:
+        Tahoma,
+        Arial,
+        sans-serif;
+
+      color: var(--text);
+
+      background:
+        radial-gradient(
+          circle at 80% 0%,
+          rgba(139, 92, 246, 0.24),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 0% 100%,
+          rgba(59, 130, 246, 0.18),
+          transparent 32%
+        ),
+        var(--bg);
+    }
+
+    button,
+    textarea,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .app {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+    }
+
+    /* =========================
+       SIDEBAR
+       ========================= */
+
+    .sidebar {
+      width: 290px;
+      flex: none;
+
+      padding: 18px;
+
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      background: rgba(8, 13, 27, 0.97);
+
+      border-left:
+        1px solid var(--line);
+
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+
+      flex: none;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 18px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--purple),
+          var(--blue)
+        );
+
+      box-shadow:
+        0 0 35px
+        rgba(139, 92, 246, 0.22);
+    }
+
+    .brand-logo svg {
+      width: 41px;
+      height: 41px;
+    }
+
+    .brand-title {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .brand-subtitle {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .new-chat {
+      width: 100%;
+
+      padding: 14px;
+
+      border: 0;
+      border-radius: 15px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--purple),
+          var(--blue)
+        );
+
+      color: white;
+
+      font-weight: 800;
+
+      transition: 0.2s ease;
+    }
+
+    .new-chat:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+    }
+
+    .status {
+      padding: 13px;
+
+      border: 1px solid #1d704b;
+      border-radius: 15px;
+
+      background:
+        rgba(5, 48, 35, 0.8);
+
+      color: #7df0b7;
+
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .section-title {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .quick,
+    .subject {
+      border: 1px solid var(--line);
+      border-radius: 13px;
+
+      background: var(--panel);
+      color: var(--text);
+
+      transition: 0.2s ease;
+    }
+
+    .quick {
+      width: 100%;
+      padding: 12px;
+      text-align: right;
+    }
+
+    .quick:hover,
+    .subject:hover {
+      border-color: var(--purple);
+      transform: translateY(-1px);
+    }
+
+    .subjects {
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap: 8px;
+    }
+
+    .subject {
+      padding: 10px 8px;
+      font-size: 12px;
+    }
+
+    .spacer {
+      flex: 1;
+      min-height: 10px;
+    }
+
+    .login-link {
+      display: block;
+
+      padding: 12px;
+
+      border: 1px solid var(--line);
+      border-radius: 13px;
+
+      background: var(--panel);
+
+      color: var(--text);
+
+      text-align: center;
+      text-decoration: none;
+
+      transition: 0.2s ease;
+    }
+
+    .login-link:hover {
+      border-color: var(--purple);
+    }
+
+    /* =========================
+       MAIN
+       ========================= */
+
+    .main {
+      min-width: 0;
+      flex: 1;
+
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      height: 70px;
+      flex: none;
+
+      padding: 0 24px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      border-bottom:
+        1px solid var(--line);
+
+      background:
+        rgba(7, 10, 20, 0.84);
+
+      backdrop-filter:
+        blur(14px);
+    }
+
+    .top-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .top-logo {
+      width: 38px;
+      height: 38px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 12px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--purple),
+          var(--blue)
+        );
+    }
+
+    .top-logo svg {
+      width: 27px;
+      height: 27px;
+    }
+
+    .top-title {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .online {
+      color: #4ade80;
+      font-size: 13px;
+    }
+
+    /* =========================
+       CHAT
+       ========================= */
+
+    .chat {
+      flex: 1;
+
+      overflow-y: auto;
+
+      padding:
+        26px
+        max(15px, calc((100% - 920px) / 2));
+
+      scroll-behavior: smooth;
+    }
+
+    .welcome {
+      max-width: 720px;
+
+      margin:
+        72px auto 30px;
+
+      text-align: center;
+    }
+
+    .welcome-logo {
+      width: 105px;
+      height: 105px;
+
+      margin: 0 auto;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 31px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--purple),
+          var(--blue)
+        );
+
+      box-shadow:
+        0 0 65px
+        rgba(99, 102, 241, 0.28);
+    }
+
+    .welcome-logo svg {
+      width: 67px;
+      height: 67px;
+    }
+
+    .welcome h1 {
+      margin:
+        20px 0 8px;
+
+      font-size: 33px;
+    }
+
+    .welcome p {
+      margin: 0;
+
+      color: var(--muted);
+
+      line-height: 1.9;
+    }
+
+    .message {
+      display: flex;
+
+      gap: 10px;
+
+      margin:
+        18px 0;
+
+      align-items:
+        flex-start;
+
+      animation:
+        messageIn 0.18s ease;
+    }
+
+    @keyframes messageIn {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message.user {
+      flex-direction: row-reverse;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+
+      flex: none;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 14px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--purple),
+          var(--blue)
+        );
+
+      color: white;
+
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .user-avatar {
+      background:
+        #3d4864;
+    }
+
+    .message-body {
+      max-width:
+        min(85%, 850px);
+    }
+
+    .bubble {
+      padding:
+        14px 17px;
+
+      border:
+        1px solid var(--line);
+
+      border-radius:
+        18px;
+
+      background:
+        var(--panel);
+
+      line-height:
+        1.95;
+
+      white-space:
+        pre-wrap;
+
+      overflow-wrap:
+        anywhere;
+
+      word-break:
+        break-word;
+    }
+
+    .message.user .bubble {
+      background:
+        #30245f;
+
+      border-color:
+        #55459d;
+    }
+
+    .actions {
+      margin-top: 6px;
+    }
+
+    .copy {
+      padding:
+        5px 9px;
+
+      border:
+        1px solid var(--line);
+
+      border-radius:
+        8px;
+
+      background:
+        var(--panel-2);
+
+      color:
+        var(--muted);
+
+      font-size:
+        11px;
+    }
+
+    .copy:hover {
+      color: var(--text);
+      border-color: var(--purple);
+    }
+
+    .typing {
+      display: none;
+
+      padding:
+        8px 3px;
+
+      color:
+        var(--muted);
+
+      font-size:
+        13px;
+    }
+
+    .dots span {
+      display: inline-block;
+
+      width: 5px;
+      height: 5px;
+
+      margin: 0 2px;
+
+      border-radius: 50%;
+
+      background:
+        var(--muted);
+
+      animation:
+        dot 0.9s infinite;
+    }
+
+    .dots span:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    .dots span:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    @keyframes dot {
+      0%,
+      100% {
+        transform: translateY(0);
+        opacity: 0.4;
+      }
+
+      50% {
+        transform: translateY(-4px);
+        opacity: 1;
+      }
+    }
+
+    /* =========================
+       COMPOSER
+       ========================= */
+
+    .composer-area {
+      padding:
+        14px
+        max(15px, calc((100% - 920px) / 2))
+        16px;
+
+      border-top:
+        1px solid var(--line);
+
+      background:
+        rgba(7, 10, 20, 0.96);
+
+      backdrop-filter:
+        blur(14px);
+    }
+
+    .composer {
+      display: flex;
+
+      gap: 9px;
+
+      align-items: flex-end;
+
+      padding: 9px;
+
+      border:
+        1px solid var(--line);
+
+      border-radius: 20px;
+
+      background:
+        var(--panel);
+    }
+
+    .tool,
+    .send {
+      width: 48px;
+      height: 48px;
+
+      flex: none;
+
+      border:
+        1px solid var(--line);
+
+      border-radius: 14px;
+
+      background:
+        var(--panel-2);
+
+      color:
+        var(--text);
+
+      transition: 0.2s ease;
+    }
+
+    .tool:hover {
+      border-color:
+        var(--purple);
+    }
+
+    .send {
+      border: 0;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--purple),
+          var(--blue)
+        );
+
+      font-size: 20px;
+    }
+
+    .send:hover {
+      filter:
+        brightness(1.08);
+    }
+
+    .send.stop {
+      background:
+        var(--red);
+    }
+
+    textarea {
+      flex: 1;
+
+      min-height: 48px;
+      max-height: 160px;
+
+      padding:
+        10px;
+
+      border: 0;
+      outline: 0;
+
+      resize: none;
+
+      background:
+        transparent;
+
+      color:
+        var(--text);
+
+      line-height:
+        1.7;
+    }
+
+    textarea::placeholder {
+      color:
+        var(--muted);
+    }
+
+    .note {
+      margin-top:
+        7px;
+
+      text-align:
+        center;
+
+      color:
+        var(--muted);
+
+      font-size:
+        10px;
+    }
+
+    @media (max-width: 800px) {
+      .sidebar {
+        display: none;
+      }
+
+      .topbar {
+        padding:
+          0 14px;
+      }
+
+      .chat {
+        padding:
+          18px 10px;
+      }
+
+      .composer-area {
+        padding:
+          10px;
+      }
+
+      .message-body {
+        max-width:
+          90%;
+      }
+
+      .welcome {
+        margin-top:
+          45px;
+      }
+
+      .welcome h1 {
+        font-size:
+          27px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div class="app">
-<aside class="side">
-<div class="brand"><div class="logo">N</div><div><h1>NOVA</h1><small>Your Smart Companion</small></div></div>
-<button id="newChat" class="new">＋ محادثة جديدة</button>
-<div class="free">🟢 <b>AI Online</b><br>يمكن استخدامها من الهاتف والكمبيوتر بعد النشر.</div>
-<div class="muted" style="font-size:13px">جرب:</div>
-<button class="quick" data-q="اشرح لي قانون أوم ببساطة ثم اختبرني">⚡ اشرح واختبرني</button>
-<button class="quick" data-q="اعمل لي خطة مذاكرة لمدة 4 ساعات">📚 خطة مذاكرة</button>
-<button class="quick" data-q="أنا مش فاهم الفيزياء، ساعديني من البداية">💬 ساعديني</button>
-</aside>
-<main class="main">
-<div class="top"><strong>NOVA AI ✨</strong><span class="online">● متصلة</span></div>
-<div id="chat" class="chat">
-<div id="welcome" class="welcome"><div class="orb">N</div><h2>أهلًا، أنا NOVA ✨</h2><p>مساعدتك الذكية أينما كنت.<br>هذه الواجهة تعمل على الهاتف والكمبيوتر عند نشرها على الإنترنت.</p></div>
-<div id="typing" class="typing">✨ NOVA تفكر...</div>
-</div>
-<div class="bottom"><div class="inputbox"><textarea id="input" placeholder="اكتب رسالتك إلى NOVA..."></textarea><button id="send" class="send">➤</button></div><div class="note">Enter للإرسال • Shift + Enter لسطر جديد</div></div>
-</main>
-</div>
-<script>
-const sessionId=localStorage.getItem("nova_online_sid")||crypto.randomUUID();localStorage.setItem("nova_online_sid",sessionId);
-const chat=document.getElementById("chat"),input=document.getElementById("input"),send=document.getElementById("send"),typing=document.getElementById("typing");
-function addMessage(text,user=false){document.getElementById("welcome")?.remove();const row=document.createElement("div");row.className="message"+(user?" user":"");const av=document.createElement("div");av.className="avatar";av.textContent=user?"أنت":"N";const bubble=document.createElement("div");bubble.className="bubble";bubble.textContent=text;row.append(av,bubble);chat.insertBefore(row,typing);chat.scrollTop=chat.scrollHeight}
-async function sendMessage(){const message=input.value.trim();if(!message||send.disabled)return;addMessage(message,true);input.value="";input.style.height="46px";send.disabled=true;typing.style.display="block";try{const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessionId,message})});const d=await r.json();if(!r.ok)throw Error(d.error||"حدث خطأ");addMessage(d.answer)}catch(e){addMessage("حدث خطأ: "+e.message)}finally{typing.style.display="none";send.disabled=false;input.focus()}}
-send.addEventListener("click",sendMessage);input.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage()}});input.addEventListener("input",()=>{input.style.height="46px";input.style.height=Math.min(input.scrollHeight,140)+"px"});
-document.querySelectorAll(".quick").forEach(b=>b.addEventListener("click",()=>{input.value=b.dataset.q;sendMessage()}));
-document.getElementById("newChat").addEventListener("click",async()=>{await fetch("/api/new-chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessionId})});localStorage.setItem("nova_online_sid",crypto.randomUUID());location.reload()});
-</script>
+
+  <div class="app">
+
+    <aside class="sidebar">
+
+      <div class="brand">
+
+        <div class="brand-logo">
+          <svg viewBox="0 0 100 100">
+            <path
+              d="M12 37L50 15L88 37L50 59Z"
+              fill="white"
+            />
+
+            <path
+              d="M25 44V78H75V44L50 59Z"
+              fill="#38bdf8"
+            />
+
+            <path
+              d="M41 58H59V78H41Z"
+              fill="white"
+            />
+          </svg>
+        </div>
+
+        <div>
+          <div class="brand-title">
+            Education GPT
+          </div>
+
+          <div class="brand-subtitle">
+            Your Smart AI Companion
+          </div>
+        </div>
+
+      </div>
+
+
+      <button
+        id="newChat"
+        class="new-chat"
+        type="button"
+      >
+        ＋ محادثة جديدة
+      </button>
+
+
+      <div class="status">
+        🟢 <b>AI Online</b>
+        <br>
+        Education GPT جاهز للمساعدة
+      </div>
+
+
+      <div class="section-title">
+        أدوات سريعة
+      </div>
+
+
+      <button
+        class="quick"
+        type="button"
+        data-prompt="اشرح لي هذا الموضوع بطريقة بسيطة ثم اختبرني"
+      >
+        ⚡ اشرح واختبرني
+      </button>
+
+
+      <button
+        class="quick"
+        type="button"
+        data-prompt="لخص لي هذا الموضوع مع أهم النقاط"
+      >
+        📚 لخص الموضوع
+      </button>
+
+
+      <button
+        class="quick"
+        type="button"
+        data-prompt="اختبرني سؤالًا واحدًا كل مرة وانتظر إجابتي"
+      >
+        ✅ اختبرني
+      </button>
+
+
+      <button
+        class="quick"
+        type="button"
+        data-prompt="اعمل لي خطة مناسبة لمذاكرتي"
+      >
+        📅 خطة مذاكرة
+      </button>
+
+
+      <div class="section-title">
+        المجالات
+      </div>
+
+
+      <div class="subjects">
+
+        <button
+          class="subject"
+          type="button"
+          data-prompt="ساعدني في البرمجة"
+        >
+          💻 البرمجة
+        </button>
+
+
+        <button
+          class="subject"
+          type="button"
+          data-prompt="ساعدني في الكتابة"
+        >
+          ✍️ الكتابة
+        </button>
+
+
+        <button
+          class="subject"
+          type="button"
+          data-prompt="ساعدني في تطوير الألعاب"
+        >
+          🎮 الألعاب
+        </button>
+
+
+        <button
+          class="subject"
+          type="button"
+          data-prompt="ساعدني في المشاريع"
+        >
+          🚀 المشاريع
+        </button>
+
+
+        <button
+          class="subject"
+          type="button"
+          data-prompt="اشرح لي موضوعًا أريد تعلمه"
+        >
+          🎓 التعليم
+        </button>
+
+
+        <button
+          class="subject"
+          type="button"
+          data-prompt="ساعدني في حل هذه المشكلة"
+        >
+          🧠 حل المشكلات
+        </button>
+
+      </div>
+
+
+      <div class="spacer"></div>
+
+
+      <a
+        class="login-link"
+        href="/login.html"
+      >
+        👤 تسجيل الدخول
+      </a>
+
+    </aside>
+
+
+    <main class="main">
+
+      <header class="topbar">
+
+        <div class="top-brand">
+
+          <div class="top-logo">
+            <svg viewBox="0 0 100 100">
+              <path
+                d="M12 37L50 15L88 37L50 59Z"
+                fill="white"
+              />
+
+              <path
+                d="M25 44V78H75V44L50 59Z"
+                fill="#38bdf8"
+              />
+
+              <path
+                d="M41 58H59V78H41Z"
+                fill="white"
+              />
+            </svg>
+          </div>
+
+          <div class="top-title">
+            Education GPT ✨
+          </div>
+
+        </div>
+
+
+        <div class="online">
+          ● متصلة الآن
+        </div>
+
+      </header>
+
+
+      <section
+        id="chat"
+        class="chat"
+      >
+
+        <div
+          id="welcome"
+          class="welcome"
+        >
+
+          <div class="welcome-logo">
+            <svg viewBox="0 0 100 100">
+              <path
+                d="M12 37L50 15L88 37L50 59Z"
+                fill="white"
+              />
+
+              <path
+                d="M25 44V78H75V44L50 59Z"
+                fill="#38bdf8"
+              />
+
+              <path
+                d="M41 58H59V78H41Z"
+                fill="white"
+              />
+            </svg>
+          </div>
+
+
+          <h1>
+            أهلًا بك في Education GPT ✨
+          </h1>
+
+
+          <p>
+            مساعدك الذكي الشامل.
+            <br>
+            تعليم، كتابة، برمجة، ألعاب، مشاريع، وأفكار.
+          </p>
+
+        </div>
+
+
+        <div
+          id="typing"
+          class="typing"
+        >
+          Education GPT يكتب
+
+          <span class="dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </div>
+
+      </section>
+
+
+      <div class="composer-area">
+
+        <div class="composer">
+
+          <button
+            id="voice"
+            class="tool"
+            type="button"
+            title="الإملاء الصوتي"
+          >
+            🎙️
+          </button>
+
+
+          <textarea
+            id="input"
+            rows="1"
+            placeholder="اكتب رسالتك إلى Education GPT..."
+          ></textarea>
+
+
+          <button
+            id="send"
+            class="send"
+            type="button"
+          >
+            ➤
+          </button>
+
+        </div>
+
+
+        <div class="note">
+          Enter للإرسال • Shift + Enter لسطر جديد
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+
+  <script>
+    const chat =
+      document.getElementById("chat");
+
+    const input =
+      document.getElementById("input");
+
+    const send =
+      document.getElementById("send");
+
+    const typing =
+      document.getElementById("typing");
+
+    const newChat =
+      document.getElementById("newChat");
+
+    const voice =
+      document.getElementById("voice");
+
+
+    let sessionId =
+      localStorage.getItem(
+        "education_gpt_session"
+      );
+
+
+    if (!sessionId) {
+      sessionId =
+        crypto.randomUUID();
+
+      localStorage.setItem(
+        "education_gpt_session",
+        sessionId
+      );
+    }
+
+
+    let controller =
+      null;
+
+    let generating =
+      false;
+
+
+    function addMessage(
+      text,
+      user
+    ) {
+      document
+        .getElementById("welcome")
+        ?.remove();
+
+
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "message" +
+        (user ? " user" : "");
+
+
+      const avatar =
+        document.createElement("div");
+
+      avatar.className =
+        "avatar" +
+        (user ? " user-avatar" : "");
+
+
+      avatar.textContent =
+        user ? "أنت" : "✨";
+
+
+      const body =
+        document.createElement("div");
+
+      body.className =
+        "message-body";
+
+
+      const bubble =
+        document.createElement("div");
+
+      bubble.className =
+        "bubble";
+
+      bubble.textContent =
+        text;
+
+
+      body.appendChild(
+        bubble
+      );
+
+
+      if (!user) {
+        const actions =
+          document.createElement("div");
+
+        actions.className =
+          "actions";
+
+
+        const copy =
+          document.createElement("button");
+
+        copy.type =
+          "button";
+
+        copy.className =
+          "copy";
+
+        copy.textContent =
+          "نسخ";
+
+
+        copy.addEventListener(
+          "click",
+          async () => {
+            try {
+              await navigator.clipboard.writeText(
+                bubble.textContent
+              );
+
+              copy.textContent =
+                "تم النسخ";
+
+              setTimeout(
+                () => {
+                  copy.textContent =
+                    "نسخ";
+                },
+                1200
+              );
+
+            } catch (_) {}
+          }
+        );
+
+
+        actions.appendChild(
+          copy
+        );
+
+        body.appendChild(
+          actions
+        );
+      }
+
+
+      row.appendChild(
+        avatar
+      );
+
+      row.appendChild(
+        body
+      );
+
+
+      chat.insertBefore(
+        row,
+        typing
+      );
+
+
+      chat.scrollTop =
+        chat.scrollHeight;
+
+
+      return bubble;
+    }
+
+
+    async function sendMessage() {
+
+      if (generating) {
+        stopGeneration();
+        return;
+      }
+
+
+      const message =
+        input.value.trim();
+
+
+      if (!message) {
+        return;
+      }
+
+
+      addMessage(
+        message,
+        true
+      );
+
+
+      input.value =
+        "";
+
+      input.style.height =
+        "48px";
+
+
+      generating =
+        true;
+
+
+      send.classList.add(
+        "stop"
+      );
+
+      send.textContent =
+        "■";
+
+
+      typing.style.display =
+        "block";
+
+
+      controller =
+        new AbortController();
+
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/chat",
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
+
+              body:
+                JSON.stringify({
+                  sessionId,
+                  message
+                }),
+
+              signal:
+                controller.signal
+            }
+          );
+
+
+        if (!response.ok) {
+
+          const errorText =
+            await response.text();
+
+          throw new Error(
+            errorText ||
+            "حدث خطأ في الخادم"
+          );
+        }
+
+
+        typing.style.display =
+          "none";
+
+
+        const bubble =
+          addMessage(
+            "",
+            false
+          );
+
+
+        if (!response.body) {
+          throw new Error(
+            "لم يصل Stream من الخادم."
+          );
+        }
+
+
+        const reader =
+          response.body.getReader();
+
+
+        const decoder =
+          new TextDecoder();
+
+
+        let received =
+          false;
+
+
+        while (true) {
+
+          const result =
+            await reader.read();
+
+
+          if (result.done) {
+            break;
+          }
+
+
+          const text =
+            decoder.decode(
+              result.value,
+              {
+                stream: true
+              }
+            );
+
+
+          if (!text) {
+            continue;
+          }
+
+
+          received =
+            true;
+
+
+          bubble.textContent +=
+            text;
+
+
+          chat.scrollTop =
+            chat.scrollHeight;
+        }
+
+
+        const rest =
+          decoder.decode();
+
+
+        if (rest) {
+          bubble.textContent +=
+            rest;
+
+          received =
+            true;
+        }
+
+
+        if (!received) {
+          bubble.textContent =
+            "لم يصل رد من Education GPT.";
+        }
+
+
+      } catch (error) {
+
+        if (
+          error.name !==
+          "AbortError"
+        ) {
+
+          typing.style.display =
+            "none";
+
+
+          addMessage(
+            "حدث خطأ: " +
+            error.message,
+            false
+          );
+        }
+
+      } finally {
+
+        generating =
+          false;
+
+        controller =
+          null;
+
+        typing.style.display =
+          "none";
+
+        send.classList.remove(
+          "stop"
+        );
+
+        send.textContent =
+          "➤";
+
+        input.focus();
+      }
+    }
+
+
+    function stopGeneration() {
+
+      if (controller) {
+        controller.abort();
+      }
+
+      controller =
+        null;
+
+      generating =
+        false;
+
+      typing.style.display =
+        "none";
+
+      send.classList.remove(
+        "stop"
+      );
+
+      send.textContent =
+        "➤";
+    }
+
+
+    send.addEventListener(
+      "click",
+      sendMessage
+    );
+
+
+    input.addEventListener(
+      "keydown",
+      event => {
+
+        if (
+          event.key === "Enter" &&
+          !event.shiftKey
+        ) {
+
+          event.preventDefault();
+
+          sendMessage();
+        }
+
+      }
+    );
+
+
+    input.addEventListener(
+      "input",
+      () => {
+
+        input.style.height =
+          "48px";
+
+        input.style.height =
+          Math.min(
+            input.scrollHeight,
+            160
+          ) + "px";
+      }
+    );
+
+
+    newChat.addEventListener(
+      "click",
+      () => {
+
+        stopGeneration();
+
+        localStorage.removeItem(
+          "education_gpt_session"
+        );
+
+        location.reload();
+      }
+    );
+
+
+    document
+      .querySelectorAll(
+        "[data-prompt]"
+      )
+      .forEach(
+        button => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              input.value =
+                button.dataset.prompt;
+
+              input.focus();
+
+              sendMessage();
+            }
+          );
+
+        }
+      );
+
+
+    const Recognition =
+      window.SpeechRecognition ||
+      window.webkitSpeechRecognition;
+
+
+    if (Recognition) {
+
+      const recognition =
+        new Recognition();
+
+
+      recognition.lang =
+        "ar-EG";
+
+      recognition.continuous =
+        false;
+
+      recognition.interimResults =
+        true;
+
+
+      voice.addEventListener(
+        "click",
+        () => {
+
+          try {
+            recognition.start();
+
+            voice.textContent =
+              "🔴";
+
+          } catch (_) {}
+        }
+      );
+
+
+      recognition.onresult =
+        event => {
+
+          let text =
+            "";
+
+
+          for (
+            let i =
+              event.resultIndex;
+
+            i <
+              event.results.length;
+
+            i++
+          ) {
+
+            text +=
+              event.results[i][0].transcript;
+          }
+
+
+          input.value =
+            text;
+
+
+          input.dispatchEvent(
+            new Event("input")
+          );
+        };
+
+
+      recognition.onend =
+        () => {
+
+          voice.textContent =
+            "🎙️";
+        };
+
+
+      recognition.onerror =
+        () => {
+
+          voice.textContent =
+            "🎙️";
+        };
+    }
+  </script>
+
 </body>
 </html>
