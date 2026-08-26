@@ -1,40 +1,45 @@
+```javascript
 import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY
 });
 
+const sessions =
+  globalThis.__EDUCATION_GPT_SESSIONS || new Map();
+
+globalThis.__EDUCATION_GPT_SESSIONS = sessions;
+
 const SYSTEM_PROMPT = [
   "أنت Education GPT، مساعد ذكاء اصطناعي عام وشامل.",
-  "",
-  "ساعد المستخدم في:",
-  "المحادثة العامة، التعليم، الكتابة، البرمجة، تطوير المواقع،",
-  "تطوير التطبيقات، الألعاب، المشاريع، التلخيص، الترجمة، التخطيط،",
-  "حل المشكلات، العصف الذهني، وتحليل الصور والملفات عندما تكون متاحة.",
-  "",
-  "أنت لست مدرسًا فقط.",
-  "إذا طلب المستخدم البرمجة، تصرف كمبرمج ومهندس برمجيات.",
-  "إذا طلب الكتابة، اكتب النص النهائي المطلوب مباشرة.",
-  "إذا طلب التعليم، اشرح خطوة بخطوة وبأمثلة.",
-  "إذا طلب مشروعًا أو لعبة، ساعده في تحويل الفكرة إلى تنفيذ عملي.",
-  "",
-  "تحدث بطريقة طبيعية وبشرية.",
-  "افهم سياق المحادثة الحالية.",
-  "قدّم إجابات كاملة ومفيدة.",
+  "ساعد المستخدم في التعليم، الكتابة، البرمجة، تطوير المواقع، الألعاب، المشاريع، التلخيص، الترجمة، التخطيط، وحل المشكلات.",
+  "تحدث بشكل طبيعي وودود.",
+  "افهم سياق المحادثة.",
+  "قدم إجابات كاملة ومفيدة.",
   "لا تختصر بشكل مبالغ فيه.",
-  "لا تكرر نفسك.",
-  "إذا كانت المعلومات ناقصة، اسأل سؤال متابعة ذكيًا.",
-  "إذا أخطأ المستخدم، صححه بلطف واشرح السبب.",
+  "إذا طلب المستخدم كودًا، اكتب كودًا واضحًا وقابلًا للاستخدام.",
+  "إذا طلب شرحًا، اشرح خطوة بخطوة.",
+  "إذا طلب كتابة، اكتب النص النهائي مباشرة.",
+  "إذا كانت المعلومات ناقصة، اسأل سؤال متابعة.",
   "لا تختلق معلومات.",
-  "استخدم العربية عندما يكتب المستخدم بالعربية.",
-  "استخدم المصطلحات الإنجليزية عندما تكون أنسب في البرمجة والتقنية."
+  "استخدم العربية عندما يكتب المستخدم بالعربية."
 ].join("\n");
 
-function sendSSE(res, eventName, data) {
-  res.write(
-    "event: " + eventName + "\n" +
-    "data: " + JSON.stringify(data) + "\n\n"
-  );
+function getHistory(sessionId, message) {
+  const oldHistory =
+    sessions.get(sessionId) || [];
+
+  return [
+    ...oldHistory,
+    {
+      role: "user",
+      parts: [
+        {
+          text: message
+        }
+      ]
+    }
+  ].slice(-16);
 }
 
 export default async function handler(req, res) {
@@ -53,41 +58,43 @@ export default async function handler(req, res) {
 
     const body = req.body || {};
 
+    const sessionId =
+      String(body.sessionId || "");
+
     const message =
       String(body.message || "").trim();
 
-    const previousInteractionId =
-      body.previousInteractionId || null;
-
-    if (!message) {
+    if (!sessionId || !message) {
       return res.status(400).json({
-        error: "message مطلوب"
+        error: "sessionId و message مطلوبان"
       });
     }
 
-    const options = {
-      model: "gemini-3.7-flash",
-      input: message,
-      system_instruction: SYSTEM_PROMPT,
-      generation_config: {
-        thinking_level: "low"
-      },
-      stream: true
-    };
-
-    if (previousInteractionId) {
-      options.previous_interaction_id =
-        previousInteractionId;
-    }
+    const history =
+      getHistory(
+        sessionId,
+        message
+      );
 
     const stream =
-      await ai.interactions.create(options);
+      await ai.models.generateContentStream({
+        model: "gemini-3.6-flash",
+
+        contents: history,
+
+        config: {
+          systemInstruction:
+            SYSTEM_PROMPT,
+
+          maxOutputTokens: 3000
+        }
+      });
 
     res.statusCode = 200;
 
     res.setHeader(
       "Content-Type",
-      "text/event-stream; charset=utf-8"
+      "text/plain; charset=utf-8"
     );
 
     res.setHeader(
@@ -96,52 +103,46 @@ export default async function handler(req, res) {
     );
 
     res.setHeader(
-      "Connection",
-      "keep-alive"
-    );
-
-    res.setHeader(
       "X-Accel-Buffering",
       "no"
     );
 
-    if (typeof res.flushHeaders === "function") {
+    if (
+      typeof res.flushHeaders === "function"
+    ) {
       res.flushHeaders();
     }
 
-    for await (const event of stream) {
-      if (
-        event &&
-        event.event_type === "step.delta" &&
-        event.delta &&
-        event.delta.type === "text" &&
-        event.delta.text
-      ) {
-        sendSSE(
-          res,
-          "text",
-          event.delta.text
-        );
+    let fullAnswer = "";
+
+    for await (const chunk of stream) {
+      const text =
+        chunk?.text || "";
+
+      if (!text) {
+        continue;
       }
 
-      if (
-        event &&
-        event.event_type === "interaction.completed" &&
-        event.interaction &&
-        event.interaction.id
-      ) {
-        sendSSE(
-          res,
-          "done",
-          {
-            interactionId:
-              event.interaction.id
-          }
-        );
-      }
+      fullAnswer += text;
+
+      res.write(text);
     }
 
     res.end();
+
+    history.push({
+      role: "model",
+      parts: [
+        {
+          text: fullAnswer
+        }
+      ]
+    });
+
+    sessions.set(
+      sessionId,
+      history.slice(-16)
+    );
 
   } catch (error) {
     console.error(
@@ -157,18 +158,7 @@ export default async function handler(req, res) {
       });
     }
 
-    try {
-      sendSSE(
-        res,
-        "error",
-        {
-          message:
-            error?.message ||
-            "حدث خطأ أثناء تشغيل Education GPT"
-        }
-      );
-    } catch (_) {}
-
     res.end();
   }
 }
+```
