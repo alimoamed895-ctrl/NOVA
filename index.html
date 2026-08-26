@@ -11,326 +11,640 @@
   <link
     rel="icon"
     type="image/svg+xml"
-    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%237c3aed'/%3E%3Cpath d='M16 38L50 18L84 38L50 58Z' fill='white'/%3E%3Cpath d='M27 44V72H73V44L50 58Z' fill='%2338bdf8'/%3E%3Cpath d='M43 58H57V72H43Z' fill='white'/%3E%3C/svg%3E"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%237c3aed'/%3E%3Cpath d='M15 35L50 15L85 35L50 55Z' fill='white'/%3E%3Cpath d='M25 42V73H75V42L50 55Z' fill='%2338bdf8'/%3E%3Cpath d='M42 57H58V73H42Z' fill='white'/%3E%3C/svg%3E"
   />
 
   <style>
-    :root{
-      --bg:#070a14;
-      --panel:#0e1426;
-      --panel2:#121a31;
-      --line:#27345c;
-      --text:#f4f7ff;
-      --muted:#aab5d1;
-      --purple:#8b5cf6;
-      --blue:#3b82f6;
-      --green:#22c55e;
+    :root {
+      --bg: #070a14;
+      --bg-soft: #0b1020;
+      --panel: #0e1529;
+      --panel-2: #121b34;
+      --panel-3: #182444;
+      --line: #2a3b68;
+      --text: #f7f8ff;
+      --muted: #9eaac7;
+      --purple: #8b5cf6;
+      --purple-2: #a855f7;
+      --blue: #3b82f6;
+      --cyan: #22d3ee;
+      --green: #22c55e;
+      --danger: #ef4444;
+      --shadow: 0 25px 80px rgba(0, 0, 0, .35);
     }
 
-    *{
-      box-sizing:border-box;
+    body.light {
+      --bg: #eef2ff;
+      --bg-soft: #f5f7ff;
+      --panel: #ffffff;
+      --panel-2: #f4f6ff;
+      --panel-3: #e9edff;
+      --line: #d5dcf0;
+      --text: #11182b;
+      --muted: #63708e;
+      --shadow: 0 20px 60px rgba(59, 82, 246, .12);
     }
 
-    body{
-      margin:0;
-      min-height:100vh;
-      font-family:Tahoma,Arial,sans-serif;
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      font-family: Tahoma, Arial, sans-serif;
       background:
-        radial-gradient(circle at 85% 0%,#2b1560 0,transparent 30%),
-        radial-gradient(circle at 5% 100%,#102d67 0,transparent 28%),
+        radial-gradient(circle at 85% 0%, rgba(139, 92, 246, .22), transparent 32%),
+        radial-gradient(circle at 10% 95%, rgba(59, 130, 246, .14), transparent 30%),
         var(--bg);
-      color:var(--text);
+      color: var(--text);
+      overflow: hidden;
+      transition: background .25s ease, color .25s ease;
     }
 
-    button,textarea{
-      font:inherit;
+    button,
+    input,
+    textarea {
+      font: inherit;
     }
 
-    button{
-      cursor:pointer;
+    button {
+      cursor: pointer;
     }
 
-    .app{
-      height:100vh;
-      display:flex;
-      overflow:hidden;
+    a {
+      color: inherit;
+      text-decoration: none;
     }
 
-    /* Sidebar */
-    .sidebar{
-      width:290px;
-      padding:18px;
-      background:rgba(8,12,27,.96);
-      border-left:1px solid var(--line);
-      display:flex;
-      flex-direction:column;
-      gap:14px;
+    .app {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
     }
 
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
+    /* =========================
+       Sidebar
+       ========================= */
+
+    .sidebar {
+      width: 300px;
+      flex: 0 0 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 18px;
+      background: rgba(8, 13, 27, .95);
+      border-left: 1px solid var(--line);
+      backdrop-filter: blur(18px);
+      overflow-y: auto;
     }
 
-    .brand-logo{
-      width:58px;
-      height:58px;
-      border-radius:18px;
-      display:grid;
-      place-items:center;
-      background:linear-gradient(135deg,var(--purple),var(--blue));
-      box-shadow:0 0 35px rgba(124,92,246,.35);
+    body.light .sidebar {
+      background: rgba(255, 255, 255, .94);
     }
 
-    .brand-logo svg{
-      width:38px;
-      height:38px;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 6px 2px 10px;
     }
 
-    .brand-title{
-      font-size:21px;
-      font-weight:bold;
+    .brand-icon,
+    .welcome-icon,
+    .assistant-avatar {
+      display: grid;
+      place-items: center;
+      background:
+        linear-gradient(135deg, var(--purple), var(--blue));
+      box-shadow: 0 0 35px rgba(124, 92, 246, .28);
     }
 
-    .brand-subtitle{
-      color:var(--muted);
-      font-size:11px;
-      margin-top:4px;
+    .brand-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      flex: none;
     }
 
-    .new-chat{
-      border:0;
-      color:#fff;
-      padding:13px;
-      border-radius:14px;
-      font-weight:bold;
-      background:linear-gradient(135deg,var(--purple),var(--blue));
+    .brand-icon svg,
+    .welcome-icon svg,
+    .assistant-avatar svg {
+      width: 75%;
+      height: 75%;
     }
 
-    .status{
-      padding:12px;
-      border-radius:14px;
-      color:#86efac;
-      background:#0b261e;
-      border:1px solid #1c6547;
-      font-size:13px;
-      line-height:1.7;
+    .brand-title {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: .2px;
     }
 
-    .section-title{
-      color:var(--muted);
-      font-size:12px;
-      margin-top:5px;
+    .brand-subtitle {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 4px;
     }
 
-    .quick{
-      width:100%;
-      padding:12px;
-      text-align:right;
-      color:#fff;
-      background:var(--panel);
-      border:1px solid var(--line);
-      border-radius:13px;
+    .new-chat {
+      width: 100%;
+      border: 0;
+      border-radius: 15px;
+      padding: 13px 15px;
+      color: white;
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      box-shadow: 0 12px 30px rgba(91, 70, 190, .2);
+      font-weight: 800;
     }
 
-    .quick:hover{
-      border-color:var(--purple);
+    .new-chat:hover {
+      filter: brightness(1.08);
     }
 
-    .subjects{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:8px;
+    .status-card {
+      padding: 13px;
+      border-radius: 15px;
+      border: 1px solid #1f714d;
+      background: rgba(8, 48, 37, .72);
+      color: #7ef2bc;
+      line-height: 1.75;
+      font-size: 13px;
     }
 
-    .subject{
-      border:1px solid var(--line);
-      background:#101a33;
-      color:#fff;
-      border-radius:12px;
-      padding:10px 7px;
-      font-size:12px;
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--green);
+      margin-left: 5px;
+      box-shadow: 0 0 12px rgba(34, 197, 94, .7);
     }
 
-    /* Main */
-    .main{
-      flex:1;
-      min-width:0;
-      display:flex;
-      flex-direction:column;
+    .section-title {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
     }
 
-    .topbar{
-      height:70px;
-      padding:0 24px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      background:rgba(8,12,27,.82);
-      border-bottom:1px solid var(--line);
+    .quick-list {
+      display: grid;
+      gap: 9px;
     }
 
-    .topbar-title{
-      font-size:18px;
-      font-weight:bold;
+    .quick-button {
+      width: 100%;
+      text-align: right;
+      padding: 12px 13px;
+      border-radius: 13px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      transition: .2s ease;
     }
 
-    .online{
-      color:#4ade80;
-      font-size:13px;
+    .quick-button:hover {
+      border-color: var(--purple);
+      transform: translateY(-1px);
     }
 
-    .chat{
-      flex:1;
-      overflow-y:auto;
-      padding:28px max(18px,calc((100% - 920px)/2));
+    .subject-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
     }
 
-    .welcome{
-      text-align:center;
-      max-width:700px;
-      margin:70px auto 30px;
+    .subject-button {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 7px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 12px;
     }
 
-    .welcome-logo{
-      width:95px;
-      height:95px;
-      margin:auto;
-      border-radius:29px;
-      display:grid;
-      place-items:center;
-      background:linear-gradient(135deg,var(--purple),var(--blue));
-      box-shadow:0 0 55px rgba(100,75,230,.35);
+    .subject-button:hover {
+      border-color: var(--blue);
     }
 
-    .welcome-logo svg{
-      width:62px;
-      height:62px;
+    .sidebar-spacer {
+      flex: 1;
+      min-height: 10px;
     }
 
-    .welcome h1{
-      margin:17px 0 8px;
-      font-size:32px;
+    .account-row {
+      display: grid;
+      grid-template-columns: 1fr 44px;
+      gap: 8px;
     }
 
-    .welcome p{
-      color:var(--muted);
-      line-height:1.9;
-      margin:0;
+    .login-button,
+    .icon-button {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      border-radius: 13px;
     }
 
-    .message{
-      display:flex;
-      gap:10px;
-      margin:18px 0;
-      align-items:flex-start;
+    .login-button {
+      padding: 11px 12px;
+      text-align: center;
     }
 
-    .message.user{
-      flex-direction:row-reverse;
+    .icon-button {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
     }
 
-    .avatar{
-      width:42px;
-      height:42px;
-      flex:none;
-      border-radius:14px;
-      display:grid;
-      place-items:center;
-      background:linear-gradient(135deg,var(--purple),var(--blue));
-      font-size:19px;
+    .login-button:hover,
+    .icon-button:hover {
+      border-color: var(--purple);
     }
 
-    .user .avatar{
-      background:#39445c;
-      font-size:13px;
+    /* =========================
+       Main
+       ========================= */
+
+    .main {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255,255,255,.01),
+          rgba(139,92,246,.03)
+        );
     }
 
-    .bubble{
-      max-width:84%;
-      padding:14px 17px;
-      border-radius:18px;
-      border:1px solid var(--line);
-      background:var(--panel);
-      line-height:1.95;
-      white-space:pre-wrap;
-      overflow-wrap:anywhere;
+    .topbar {
+      height: 72px;
+      flex: 0 0 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(6, 10, 22, .74);
+      backdrop-filter: blur(14px);
     }
 
-    .user .bubble{
-      background:#30255f;
-      border-color:#55469f;
+    body.light .topbar {
+      background: rgba(255, 255, 255, .74);
     }
 
-    .typing{
-      display:none;
-      color:var(--muted);
-      padding:8px 2px;
-      font-size:13px;
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .composer-wrap{
-      padding:14px max(18px,calc((100% - 920px)/2));
-      border-top:1px solid var(--line);
-      background:rgba(6,10,22,.95);
+    .topbar-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--purple), var(--blue));
     }
 
-    .composer{
-      display:flex;
-      gap:10px;
-      align-items:flex-end;
-      padding:9px;
-      border-radius:18px;
-      background:var(--panel);
-      border:1px solid var(--line);
+    .topbar-logo svg {
+      width: 25px;
+      height: 25px;
     }
 
-    textarea{
-      flex:1;
-      min-height:48px;
-      max-height:150px;
-      resize:none;
-      border:0;
-      outline:0;
-      padding:11px;
-      background:transparent;
-      color:#fff;
-      line-height:1.6;
+    .topbar-title {
+      font-size: 18px;
+      font-weight: 800;
     }
 
-    .send{
-      width:54px;
-      height:54px;
-      border:0;
-      border-radius:15px;
-      color:#fff;
-      background:linear-gradient(135deg,var(--purple),var(--blue));
-      font-size:21px;
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .send:disabled{
-      opacity:.5;
+    .top-online {
+      color: #4ade80;
+      font-size: 13px;
     }
 
-    .note{
-      margin-top:7px;
-      text-align:center;
-      color:#6f7b99;
-      font-size:10px;
+    /* =========================
+       Chat
+       ========================= */
+
+    .chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px max(18px, calc((100% - 940px) / 2));
+      scroll-behavior: smooth;
     }
 
-    @media(max-width:760px){
-      .sidebar{
-        display:none;
+    .welcome {
+      max-width: 760px;
+      margin: 60px auto 30px;
+      text-align: center;
+    }
+
+    .welcome-icon {
+      width: 105px;
+      height: 105px;
+      margin: 0 auto 20px;
+      border-radius: 30px;
+      box-shadow: 0 0 65px rgba(99, 102, 241, .35);
+    }
+
+    .welcome h1 {
+      margin: 0;
+      font-size: 33px;
+      line-height: 1.35;
+    }
+
+    .welcome p {
+      color: var(--muted);
+      line-height: 2;
+      margin: 13px 0 0;
+    }
+
+    .message {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin: 18px 0;
+      animation: messageIn .18s ease;
+    }
+
+    @keyframes messageIn {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
       }
 
-      .topbar{
-        padding:0 15px;
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message.user {
+      flex-direction: row-reverse;
+    }
+
+    .assistant-avatar,
+    .user-avatar {
+      width: 42px;
+      height: 42px;
+      flex: none;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+    }
+
+    .assistant-avatar {
+      background:
+        linear-gradient(135deg, var(--purple), var(--blue));
+    }
+
+    .assistant-avatar svg {
+      width: 30px;
+      height: 30px;
+    }
+
+    .user-avatar {
+      background: #3b4866;
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    body.light .user-avatar {
+      background: #d7def2;
+      color: #25304b;
+    }
+
+    .message-content {
+      max-width: min(84%, 820px);
+    }
+
+    .bubble {
+      padding: 14px 17px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      line-height: 1.95;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+
+    .message.user .bubble {
+      background:
+        linear-gradient(
+          135deg,
+          rgba(82, 57, 155, .8),
+          rgba(60, 68, 150, .72)
+        );
+      border-color: rgba(139, 92, 246, .65);
+    }
+
+    .assistant-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 7px;
+      opacity: .72;
+    }
+
+    .mini-action {
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      color: var(--muted);
+      border-radius: 9px;
+      font-size: 11px;
+      padding: 5px 8px;
+    }
+
+    .mini-action:hover {
+      color: var(--text);
+      border-color: var(--purple);
+    }
+
+    .typing {
+      display: none;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 8px 4px;
+    }
+
+    .typing-dots span {
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      margin: 0 2px;
+      border-radius: 50%;
+      background: var(--muted);
+      animation: dot .9s infinite;
+    }
+
+    .typing-dots span:nth-child(2) {
+      animation-delay: .15s;
+    }
+
+    .typing-dots span:nth-child(3) {
+      animation-delay: .3s;
+    }
+
+    @keyframes dot {
+      0%, 100% {
+        transform: translateY(0);
+        opacity: .45;
       }
 
-      .bubble{
-        max-width:91%;
+      50% {
+        transform: translateY(-4px);
+        opacity: 1;
+      }
+    }
+
+    /* =========================
+       Composer
+       ========================= */
+
+    .composer-wrap {
+      flex: 0 0 auto;
+      padding: 14px max(18px, calc((100% - 940px) / 2)) 16px;
+      border-top: 1px solid var(--line);
+      background: rgba(6,10,22,.88);
+      backdrop-filter: blur(16px);
+    }
+
+    body.light .composer-wrap {
+      background: rgba(255,255,255,.88);
+    }
+
+    .composer {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 20px;
+      padding: 9px;
+      box-shadow: var(--shadow);
+    }
+
+    .composer-tools {
+      display: flex;
+      align-items: flex-end;
+      gap: 7px;
+    }
+
+    .composer-icon {
+      width: 43px;
+      height: 43px;
+      border-radius: 13px;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      color: var(--text);
+    }
+
+    .composer-icon:hover {
+      border-color: var(--purple);
+    }
+
+    textarea {
+      flex: 1;
+      min-height: 48px;
+      max-height: 170px;
+      resize: none;
+      padding: 11px 12px;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    textarea::placeholder {
+      color: var(--muted);
+    }
+
+    .send {
+      width: 54px;
+      height: 54px;
+      flex: none;
+      border: 0;
+      border-radius: 15px;
+      background:
+        linear-gradient(135deg, var(--purple), var(--blue));
+      color: white;
+      font-size: 21px;
+      box-shadow: 0 12px 30px rgba(68, 82, 220, .24);
+    }
+
+    .send:hover {
+      filter: brightness(1.07);
+    }
+
+    .send.stop {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+
+    .footer-note {
+      text-align: center;
+      color: var(--muted);
+      opacity: .7;
+      font-size: 10px;
+      margin-top: 7px;
+    }
+
+    /* =========================
+       Mobile
+       ========================= */
+
+    @media (max-width: 820px) {
+      .sidebar {
+        display: none;
+      }
+
+      .topbar {
+        padding: 0 14px;
+      }
+
+      .chat {
+        padding-left: 13px;
+        padding-right: 13px;
+      }
+
+      .composer-wrap {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .message-content {
+        max-width: 90%;
+      }
+
+      .welcome {
+        margin-top: 45px;
+      }
+
+      .welcome h1 {
+        font-size: 27px;
+      }
+
+      .composer-icon.hide-mobile {
+        display: none;
       }
     }
   </style>
@@ -338,386 +652,1008 @@
 
 <body>
 
-<div class="app">
+  <div class="app">
 
-  <aside class="sidebar">
+    <!-- =========================
+         SIDEBAR
+         ========================= -->
 
-    <div class="brand">
+    <aside class="sidebar">
 
-      <div class="brand-logo">
-        <svg viewBox="0 0 100 100" aria-hidden="true">
-          <path d="M15 35L50 15L85 35L50 55Z" fill="white"/>
-          <path d="M25 42V73H75V42L50 55Z" fill="#38bdf8"/>
-          <path d="M42 57H58V73H42Z" fill="white"/>
-        </svg>
-      </div>
+      <div class="brand">
 
-      <div>
-        <div class="brand-title">Education GPT</div>
-        <div class="brand-subtitle">Your Smart Study Companion</div>
-      </div>
-
-    </div>
-
-    <button class="new-chat" id="newChat">
-      ＋ محادثة جديدة
-    </button>
-
-    <div class="status">
-      🟢 <b>AI Online</b><br>
-      Education GPT جاهز للمساعدة
-    </div>
-
-    <div class="section-title">أدوات سريعة</div>
-
-    <button class="quick" data-q="اشرح لي هذا الدرس بطريقة سهلة ثم اختبرني">
-      ⚡ اشرح واختبرني
-    </button>
-
-    <button class="quick" data-q="لخص لي الموضوع بطريقة سهلة للحفظ">
-      📚 لخص الموضوع
-    </button>
-
-    <button class="quick" data-q="اختبرني سؤالًا سؤالًا في هذا الموضوع">
-      ✅ اختبرني
-    </button>
-
-    <button class="quick" data-q="اعمل لي خطة مذاكرة مناسبة لليوم">
-      📅 خطة مذاكرة
-    </button>
-
-    <div class="section-title">المواد</div>
-
-    <div class="subjects">
-      <button class="subject" data-q="ساعدني في الرياضيات">➗ الرياضيات</button>
-      <button class="subject" data-q="ساعدني في الفيزياء">⚡ الفيزياء</button>
-      <button class="subject" data-q="ساعدني في الكيمياء">🧪 الكيمياء</button>
-      <button class="subject" data-q="ساعدني في اللغة العربية">📖 العربية</button>
-      <button class="subject" data-q="ساعدني في الإنجليزي">🌍 الإنجليزي</button>
-      <button class="subject" data-q="ساعدني في البرمجة">💻 البرمجة</button>
-    </div>
-
-  </aside>
-
-  <main class="main">
-
-    <header class="topbar">
-      <div class="topbar-title">Education GPT ✨</div>
-      <div class="online">● متصلة الآن</div>
-    </header>
-
-    <section class="chat" id="chat">
-
-      <div class="welcome" id="welcome">
-
-        <div class="welcome-logo">
-          <svg viewBox="0 0 100 100" aria-hidden="true">
-            <path d="M15 35L50 15L85 35L50 55Z" fill="white"/>
-            <path d="M25 42V73H75V42L50 55Z" fill="#38bdf8"/>
-            <path d="M42 57H58V73H42Z" fill="white"/>
+        <div class="brand-icon">
+          <svg viewBox="0 0 100 100">
+            <path
+              d="M15 35L50 15L85 35L50 55Z"
+              fill="white"
+            />
+            <path
+              d="M25 42V73H75V42L50 55Z"
+              fill="#38bdf8"
+            />
+            <path
+              d="M42 57H58V73H42Z"
+              fill="white"
+            />
           </svg>
         </div>
 
-        <h1>أهلًا بك في Education GPT ✨</h1>
+        <div>
+          <div class="brand-title">
+            Education GPT
+          </div>
 
-        <p>
-          مساعدك التعليمي الذكي.<br>
-          أشرح، أناقش، ألخص، أختبرك، وأساعدك في المذاكرة.
-        </p>
+          <div class="brand-subtitle">
+            Your Smart Study Companion
+          </div>
+        </div>
 
       </div>
 
-      <div class="typing" id="typing">
-        ✨ Education GPT يكتب...
+
+      <button
+        id="newChat"
+        class="new-chat"
+      >
+        ＋ محادثة جديدة
+      </button>
+
+
+      <div class="status-card">
+        <span class="status-dot"></span>
+        <b>AI Online</b>
+        <br>
+        Education GPT جاهز للمساعدة
       </div>
 
-    </section>
 
-    <div class="composer-wrap">
+      <div class="section-title">
+        أدوات سريعة
+      </div>
 
-      <div class="composer">
 
-        <textarea
-          id="input"
-          placeholder="اكتب رسالتك إلى Education GPT..."
-        ></textarea>
+      <div class="quick-list">
 
-        <button id="send" class="send">
-          ➤
+        <button
+          class="quick-button"
+          data-prompt="اشرح لي هذا الدرس بطريقة سهلة ثم اختبرني سؤالًا سؤالًا"
+        >
+          ⚡ اشرح واختبرني
+        </button>
+
+        <button
+          class="quick-button"
+          data-prompt="لخص لي هذا الموضوع بطريقة سهلة للحفظ مع أهم النقاط"
+        >
+          📚 لخص الموضوع
+        </button>
+
+        <button
+          class="quick-button"
+          data-prompt="اختبرني في هذا الموضوع سؤالًا واحدًا كل مرة وانتظر إجابتي"
+        >
+          ✅ اختبرني
+        </button>
+
+        <button
+          class="quick-button"
+          data-prompt="اعمل لي خطة مذاكرة مناسبة لليوم"
+        >
+          📅 خطة مذاكرة
         </button>
 
       </div>
 
-      <div class="note">
-        Enter للإرسال • Shift + Enter لسطر جديد
+
+      <div class="section-title">
+        المواد
       </div>
 
-    </div>
 
-  </main>
+      <div class="subject-grid">
 
-</div>
+        <button
+          class="subject-button"
+          data-prompt="ساعدني في الرياضيات"
+        >
+          ➗ الرياضيات
+        </button>
 
-<script>
+        <button
+          class="subject-button"
+          data-prompt="ساعدني في الفيزياء"
+        >
+          ⚡ الفيزياء
+        </button>
 
-const sessionId =
-  localStorage.getItem("education_gpt_session")
-  || crypto.randomUUID();
+        <button
+          class="subject-button"
+          data-prompt="ساعدني في الكيمياء"
+        >
+          🧪 الكيمياء
+        </button>
 
-localStorage.setItem(
-  "education_gpt_session",
-  sessionId
-);
+        <button
+          class="subject-button"
+          data-prompt="ساعدني في اللغة العربية"
+        >
+          📖 العربية
+        </button>
 
-const chat =
-  document.getElementById("chat");
+        <button
+          class="subject-button"
+          data-prompt="ساعدني في اللغة الإنجليزية"
+        >
+          🌍 الإنجليزي
+        </button>
 
-const input =
-  document.getElementById("input");
+        <button
+          class="subject-button"
+          data-prompt="ساعدني في البرمجة"
+        >
+          💻 البرمجة
+        </button>
 
-const send =
-  document.getElementById("send");
-
-const typing =
-  document.getElementById("typing");
-
-
-function addMessage(text, user = false){
-
-  document.getElementById("welcome")?.remove();
-
-  const row =
-    document.createElement("div");
-
-  row.className =
-    "message" + (user ? " user" : "");
-
-  const avatar =
-    document.createElement("div");
-
-  avatar.className = "avatar";
-
-  avatar.textContent =
-    user ? "أنت" : "📚";
-
-  const bubble =
-    document.createElement("div");
-
-  bubble.className = "bubble";
-
-  bubble.textContent = text;
-
-  row.append(avatar,bubble);
-
-  chat.insertBefore(row,typing);
-
-  chat.scrollTop =
-    chat.scrollHeight;
-
-  return bubble;
-}
+      </div>
 
 
-async function sendMessage(){
+      <div class="sidebar-spacer"></div>
 
-  const message =
-    input.value.trim();
 
-  if(!message || send.disabled){
-    return;
-  }
+      <div class="account-row">
 
-  addMessage(message,true);
+        <a
+          class="login-button"
+          href="/login.html"
+        >
+          👤 تسجيل الدخول
+        </a>
 
-  input.value = "";
-  input.style.height = "48px";
+        <button
+          id="themeToggle"
+          class="icon-button"
+          title="تغيير المظهر"
+        >
+          🌙
+        </button>
 
-  send.disabled = true;
-  typing.style.display = "block";
+      </div>
 
-  try{
+    </aside>
 
-    const response =
-      await fetch("/api/chat",{
-        method:"POST",
 
-        headers:{
-          "Content-Type":
-            "application/json"
-        },
+    <!-- =========================
+         MAIN
+         ========================= -->
 
-        body:JSON.stringify({
-          sessionId,
-          message
-        })
-      });
+    <main class="main">
 
-    if(!response.ok){
+      <header class="topbar">
 
-      const errorText =
-        await response.text();
+        <div class="topbar-left">
 
-      throw new Error(
-        errorText ||
-        "حدث خطأ أثناء الاتصال"
+          <div class="topbar-logo">
+
+            <svg viewBox="0 0 100 100">
+              <path
+                d="M15 35L50 15L85 35L50 55Z"
+                fill="white"
+              />
+
+              <path
+                d="M25 42V73H75V42L50 55Z"
+                fill="#38bdf8"
+              />
+
+              <path
+                d="M42 57H58V73H42Z"
+                fill="white"
+              />
+            </svg>
+
+          </div>
+
+          <div class="topbar-title">
+            Education GPT
+          </div>
+
+        </div>
+
+
+        <div class="topbar-right">
+
+          <button
+            id="topThemeToggle"
+            class="icon-button"
+            title="المظهر"
+          >
+            🌙
+          </button>
+
+          <span class="top-online">
+            ● متصلة الآن
+          </span>
+
+        </div>
+
+      </header>
+
+
+      <section
+        id="chat"
+        class="chat"
+      >
+
+        <div
+          id="welcome"
+          class="welcome"
+        >
+
+          <div class="welcome-icon">
+
+            <svg viewBox="0 0 100 100">
+
+              <path
+                d="M15 35L50 15L85 35L50 55Z"
+                fill="white"
+              />
+
+              <path
+                d="M25 42V73H75V42L50 55Z"
+                fill="#38bdf8"
+              />
+
+              <path
+                d="M42 57H58V73H42Z"
+                fill="white"
+              />
+
+            </svg>
+
+          </div>
+
+          <h1>
+            أهلًا بك في Education GPT ✨
+          </h1>
+
+          <p>
+            مساعدك التعليمي الذكي.
+            <br>
+            اشرح، ناقش، لخص، اختبر، وخطط لمذاكرتك.
+          </p>
+
+        </div>
+
+
+        <div
+          id="typing"
+          class="typing"
+        >
+          Education GPT يكتب
+          <span class="typing-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </div>
+
+      </section>
+
+
+      <div class="composer-wrap">
+
+        <div class="composer">
+
+          <div class="composer-tools">
+
+            <button
+              id="voiceButton"
+              class="composer-icon"
+              title="إملاء صوتي"
+            >
+              🎙️
+            </button>
+
+            <button
+              id="clearButton"
+              class="composer-icon hide-mobile"
+              title="مسح الحقل"
+            >
+              🧹
+            </button>
+
+          </div>
+
+
+          <textarea
+            id="input"
+            rows="1"
+            placeholder="اكتب رسالتك إلى Education GPT..."
+          ></textarea>
+
+
+          <button
+            id="send"
+            class="send"
+          >
+            ➤
+          </button>
+
+        </div>
+
+
+        <div class="footer-note">
+          Enter للإرسال • Shift + Enter لسطر جديد
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+
+  <script>
+    /* =========================
+       Session
+       ========================= */
+
+    const sessionId =
+      localStorage.getItem("education_gpt_session") ||
+      crypto.randomUUID();
+
+    localStorage.setItem(
+      "education_gpt_session",
+      sessionId
+    );
+
+
+    /* =========================
+       Elements
+       ========================= */
+
+    const chat =
+      document.getElementById("chat");
+
+    const input =
+      document.getElementById("input");
+
+    const send =
+      document.getElementById("send");
+
+    const typing =
+      document.getElementById("typing");
+
+    const newChat =
+      document.getElementById("newChat");
+
+    const themeToggle =
+      document.getElementById("themeToggle");
+
+    const topThemeToggle =
+      document.getElementById("topThemeToggle");
+
+    const clearButton =
+      document.getElementById("clearButton");
+
+    const voiceButton =
+      document.getElementById("voiceButton");
+
+
+    let controller = null;
+    let isGenerating = false;
+
+
+    /* =========================
+       Theme
+       ========================= */
+
+    function applyTheme(theme) {
+
+      document.body.classList.toggle(
+        "light",
+        theme === "light"
+      );
+
+      const icon =
+        theme === "light"
+          ? "☀️"
+          : "🌙";
+
+      themeToggle.textContent = icon;
+      topThemeToggle.textContent = icon;
+
+      localStorage.setItem(
+        "education_gpt_theme",
+        theme
       );
     }
 
-    document
-      .getElementById("welcome")
-      ?.remove();
 
-    const row =
-      document.createElement("div");
+    function toggleTheme() {
 
-    row.className = "message";
+      const isLight =
+        document.body.classList.contains("light");
 
-    const avatar =
-      document.createElement("div");
+      applyTheme(
+        isLight
+          ? "dark"
+          : "light"
+      );
+    }
 
-    avatar.className = "avatar";
 
-    avatar.textContent = "📚";
+    applyTheme(
+      localStorage.getItem(
+        "education_gpt_theme"
+      ) || "dark"
+    );
 
-    const bubble =
-      document.createElement("div");
 
-    bubble.className = "bubble";
+    themeToggle.addEventListener(
+      "click",
+      toggleTheme
+    );
 
-    row.append(avatar,bubble);
+    topThemeToggle.addEventListener(
+      "click",
+      toggleTheme
+    );
 
-    chat.insertBefore(row,typing);
 
-    typing.style.display = "none";
+    /* =========================
+       Messages
+       ========================= */
 
-    const reader =
-      response.body.getReader();
+    function addMessage(
+      text,
+      isUser = false
+    ) {
 
-    const decoder =
-      new TextDecoder();
+      document
+        .getElementById("welcome")
+        ?.remove();
 
-    let fullText = "";
+      const row =
+        document.createElement("div");
 
-    while(true){
+      row.className =
+        "message" +
+        (isUser ? " user" : "");
 
-      const {value,done} =
-        await reader.read();
 
-      if(done){
-        break;
+      const avatar =
+        document.createElement("div");
+
+      avatar.className =
+        isUser
+          ? "user-avatar"
+          : "assistant-avatar";
+
+
+      if (isUser) {
+
+        avatar.textContent =
+          "أنت";
+
+      } else {
+
+        avatar.innerHTML = `
+          <svg viewBox="0 0 100 100">
+            <path
+              d="M15 35L50 15L85 35L50 55Z"
+              fill="white"
+            />
+            <path
+              d="M25 42V73H75V42L50 55Z"
+              fill="#38bdf8"
+            />
+            <path
+              d="M42 57H58V73H42Z"
+              fill="white"
+            />
+          </svg>
+        `;
       }
 
-      const chunk =
-        decoder.decode(
-          value,
-          {stream:true}
-        );
 
-      fullText += chunk;
+      const content =
+        document.createElement("div");
+
+      content.className =
+        "message-content";
+
+
+      const bubble =
+        document.createElement("div");
+
+      bubble.className =
+        "bubble";
 
       bubble.textContent =
-        fullText;
+        text;
+
+
+      content.appendChild(bubble);
+
+
+      if (!isUser) {
+
+        const actions =
+          document.createElement("div");
+
+        actions.className =
+          "assistant-actions";
+
+
+        const copyButton =
+          document.createElement("button");
+
+        copyButton.className =
+          "mini-action";
+
+        copyButton.textContent =
+          "نسخ";
+
+
+        copyButton.addEventListener(
+          "click",
+          async () => {
+
+            try {
+
+              await navigator.clipboard.writeText(
+                bubble.textContent
+              );
+
+              copyButton.textContent =
+                "تم النسخ";
+
+              setTimeout(() => {
+                copyButton.textContent =
+                  "نسخ";
+              }, 1500);
+
+            } catch (_) {}
+          }
+        );
+
+
+        actions.appendChild(copyButton);
+        content.appendChild(actions);
+      }
+
+
+      row.appendChild(avatar);
+      row.appendChild(content);
+
+
+      chat.insertBefore(
+        row,
+        typing
+      );
+
 
       chat.scrollTop =
         chat.scrollHeight;
+
+
+      return bubble;
     }
 
-  }catch(error){
 
-    typing.style.display = "none";
+    /* =========================
+       Stop Generation
+       ========================= */
 
-    addMessage(
-      "حدث خطأ: " +
-      error.message
-    );
+    function stopGeneration() {
 
-  }finally{
+      if (controller) {
 
-    typing.style.display = "none";
-    send.disabled = false;
-    input.focus();
+        controller.abort();
+        controller = null;
+      }
 
-  }
-}
+      isGenerating = false;
 
+      send.disabled = false;
 
-send.addEventListener(
-  "click",
-  sendMessage
-);
+      send.classList.remove("stop");
+      send.textContent = "➤";
 
+      typing.style.display =
+        "none";
 
-input.addEventListener(
-  "keydown",
-  e => {
-
-    if(
-      e.key === "Enter" &&
-      !e.shiftKey
-    ){
-
-      e.preventDefault();
-
-      sendMessage();
+      input.focus();
     }
 
-  }
-);
+
+    /* =========================
+       Send Message
+       ========================= */
+
+    async function sendMessage() {
+
+      const message =
+        input.value.trim();
 
 
-input.addEventListener(
-  "input",
-  () => {
-
-    input.style.height =
-      "48px";
-
-    input.style.height =
-      Math.min(
-        input.scrollHeight,
-        150
-      ) + "px";
-
-  }
-);
+      if (
+        !message ||
+        isGenerating
+      ) {
+        return;
+      }
 
 
-document
-  .querySelectorAll(".quick,.subject")
-  .forEach(button => {
+      addMessage(
+        message,
+        true
+      );
 
-    button.addEventListener(
+
+      input.value = "";
+      input.style.height =
+        "48px";
+
+
+      isGenerating = true;
+
+      send.classList.add("stop");
+      send.textContent = "■";
+
+      typing.style.display =
+        "block";
+
+
+      controller =
+        new AbortController();
+
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/chat",
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
+
+              body: JSON.stringify({
+                sessionId,
+                message
+              }),
+
+              signal:
+                controller.signal
+            }
+          );
+
+
+        if (!response.ok) {
+
+          const errorText =
+            await response.text();
+
+          throw new Error(
+            errorText ||
+            "حدث خطأ أثناء الاتصال"
+          );
+        }
+
+
+        typing.style.display =
+          "none";
+
+
+        const bubble =
+          addMessage(
+            "",
+            false
+          );
+
+
+        const reader =
+          response.body.getReader();
+
+        const decoder =
+          new TextDecoder();
+
+
+        let fullText = "";
+
+
+        while (true) {
+
+          const {
+            value,
+            done
+          } =
+            await reader.read();
+
+
+          if (done) {
+            break;
+          }
+
+
+          const chunk =
+            decoder.decode(
+              value,
+              {
+                stream: true
+              }
+            );
+
+
+          fullText +=
+            chunk;
+
+
+          bubble.textContent =
+            fullText;
+
+
+          chat.scrollTop =
+            chat.scrollHeight;
+        }
+
+
+      } catch (error) {
+
+        if (
+          error.name === "AbortError"
+        ) {
+
+          return;
+        }
+
+
+        typing.style.display =
+          "none";
+
+
+        addMessage(
+          "حدث خطأ: " +
+          error.message
+        );
+
+      } finally {
+
+        controller = null;
+
+        isGenerating = false;
+
+        send.disabled = false;
+
+        send.classList.remove("stop");
+
+        send.textContent = "➤";
+
+        typing.style.display =
+          "none";
+
+        input.focus();
+      }
+    }
+
+
+    /* =========================
+       Send / Stop Button
+       ========================= */
+
+    send.addEventListener(
       "click",
       () => {
 
-        input.value =
-          button.dataset.q;
+        if (isGenerating) {
 
-        sendMessage();
+          stopGeneration();
+
+        } else {
+
+          sendMessage();
+        }
+      }
+    );
+
+
+    /* =========================
+       Keyboard
+       ========================= */
+
+    input.addEventListener(
+      "keydown",
+      event => {
+
+        if (
+          event.key === "Enter" &&
+          !event.shiftKey
+        ) {
+
+          event.preventDefault();
+
+          sendMessage();
+        }
 
       }
     );
 
-  });
+
+    /* =========================
+       Auto Resize
+       ========================= */
+
+    input.addEventListener(
+      "input",
+      () => {
+
+        input.style.height =
+          "48px";
+
+        input.style.height =
+          Math.min(
+            input.scrollHeight,
+            170
+          ) + "px";
+      }
+    );
 
 
-document
-  .getElementById("newChat")
-  .addEventListener(
-    "click",
-    () => {
+    /* =========================
+       Clear Input
+       ========================= */
 
-      localStorage.setItem(
-        "education_gpt_session",
-        crypto.randomUUID()
+    clearButton.addEventListener(
+      "click",
+      () => {
+
+        input.value = "";
+
+        input.style.height =
+          "48px";
+
+        input.focus();
+      }
+    );
+
+
+    /* =========================
+       Quick Buttons
+       ========================= */
+
+    document
+      .querySelectorAll(
+        "[data-prompt]"
+      )
+      .forEach(button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            input.value =
+              button.dataset.prompt;
+
+            input.focus();
+
+            sendMessage();
+          }
+        );
+      });
+
+
+    /* =========================
+       New Chat
+       ========================= */
+
+    newChat.addEventListener(
+      "click",
+      () => {
+
+        if (isGenerating) {
+          stopGeneration();
+        }
+
+        localStorage.setItem(
+          "education_gpt_session",
+          crypto.randomUUID()
+        );
+
+        location.reload();
+      }
+    );
+
+
+    /* =========================
+       Voice Input
+       ========================= */
+
+    const SpeechRecognition =
+      window.SpeechRecognition ||
+      window.webkitSpeechRecognition;
+
+
+    if (SpeechRecognition) {
+
+      const recognition =
+        new SpeechRecognition();
+
+      recognition.lang =
+        "ar-EG";
+
+      recognition.interimResults =
+        true;
+
+      recognition.continuous =
+        false;
+
+
+      voiceButton.addEventListener(
+        "click",
+        () => {
+
+          recognition.start();
+
+          voiceButton.textContent =
+            "🔴";
+        }
       );
 
-      location.reload();
+
+      recognition.onresult =
+        event => {
+
+          let transcript = "";
+
+          for (
+            let i = event.resultIndex;
+            i < event.results.length;
+            i++
+          ) {
+
+            transcript +=
+              event.results[i][0].transcript;
+          }
+
+
+          input.value =
+            transcript;
+
+          input.dispatchEvent(
+            new Event("input")
+          );
+        };
+
+
+      recognition.onend =
+        () => {
+
+          voiceButton.textContent =
+            "🎙️";
+        };
+
+
+      recognition.onerror =
+        () => {
+
+          voiceButton.textContent =
+            "🎙️";
+        };
+
+    } else {
+
+      voiceButton.title =
+        "الإملاء الصوتي غير متاح في هذا المتصفح";
 
     }
-  );
 
-</script>
+  </script>
 
 </body>
 </html>
