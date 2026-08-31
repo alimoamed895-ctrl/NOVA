@@ -28,7 +28,6 @@
       --blue: #3b82f6;
       --green: #22c55e;
       --red: #ef4444;
-      --shadow: rgba(0, 0, 0, 0.22);
     }
 
     * {
@@ -83,6 +82,7 @@
     .app {
       width: 100%;
       height: 100vh;
+
       display: flex;
     }
 
@@ -98,6 +98,7 @@
 
       display: flex;
       flex-direction: column;
+
       gap: 12px;
 
       background:
@@ -112,6 +113,7 @@
     .brand {
       display: flex;
       align-items: center;
+
       gap: 12px;
     }
 
@@ -151,8 +153,7 @@
     .brand-subtitle {
       margin-top: 4px;
 
-      color:
-        var(--muted);
+      color: var(--muted);
 
       font-size: 11px;
     }
@@ -163,7 +164,6 @@
       padding: 14px;
 
       border: 0;
-
       border-radius: 15px;
 
       background:
@@ -176,17 +176,6 @@
       color: white;
 
       font-weight: 800;
-
-      transition:
-        0.2s ease;
-    }
-
-    .new-chat:hover {
-      transform:
-        translateY(-1px);
-
-      filter:
-        brightness(1.08);
     }
 
     .status {
@@ -200,22 +189,17 @@
       background:
         rgba(5, 48, 35, 0.8);
 
-      color:
-        #7df0b7;
+      color: #7df0b7;
 
-      font-size:
-        13px;
+      font-size: 13px;
 
-      line-height:
-        1.7;
+      line-height: 1.7;
     }
 
     .section-title {
-      color:
-        var(--muted);
+      color: var(--muted);
 
-      font-size:
-        12px;
+      font-size: 12px;
     }
 
     .quick,
@@ -223,8 +207,7 @@
       border:
         1px solid var(--line);
 
-      border-radius:
-        13px;
+      border-radius: 13px;
 
       background:
         var(--panel);
@@ -248,9 +231,6 @@
     .subject:hover {
       border-color:
         var(--purple);
-
-      transform:
-        translateY(-1px);
     }
 
     .subjects {
@@ -266,15 +246,11 @@
       padding:
         10px 8px;
 
-      font-size:
-        12px;
+      font-size: 12px;
     }
 
     .spacer {
       flex: 1;
-
-      min-height:
-        10px;
     }
 
     .login-link {
@@ -292,22 +268,11 @@
       background:
         var(--panel);
 
-      color:
-        var(--text);
-
       text-align:
         center;
 
       text-decoration:
         none;
-
-      transition:
-        0.2s ease;
-    }
-
-    .login-link:hover {
-      border-color:
-        var(--purple);
     }
 
     /* =========================
@@ -329,14 +294,12 @@
       height:
         70px;
 
-      flex:
-        none;
+      flex: none;
 
       padding:
         0 24px;
 
-      display:
-        flex;
+      display: flex;
 
       align-items:
         center;
@@ -355,8 +318,7 @@
     }
 
     .top-brand {
-      display:
-        flex;
+      display: flex;
 
       align-items:
         center;
@@ -430,9 +392,6 @@
           15px,
           calc((100% - 920px) / 2)
         );
-
-      scroll-behavior:
-        smooth;
     }
 
     .welcome {
@@ -516,27 +475,6 @@
 
       align-items:
         flex-start;
-
-      animation:
-        messageIn 0.18s ease;
-    }
-
-    @keyframes messageIn {
-      from {
-        opacity:
-          0;
-
-        transform:
-          translateY(5px);
-      }
-
-      to {
-        opacity:
-          1;
-
-        transform:
-          translateY(0);
-      }
     }
 
     .message.user {
@@ -614,10 +552,6 @@
 
       word-break:
         break-word;
-
-      box-shadow:
-        0 10px 30px
-        var(--shadow);
     }
 
     .message.user .bubble {
@@ -728,7 +662,7 @@
     }
 
     /* =========================
-       IMAGE PREVIEW
+       IMAGE
        ========================= */
 
     .image-preview {
@@ -740,15 +674,6 @@
     }
 
     .image-preview-box {
-      width:
-        max-content;
-
-      max-width:
-        100%;
-
-      padding:
-        7px;
-
       display:
         flex;
 
@@ -757,6 +682,15 @@
 
       gap:
         8px;
+
+      width:
+        max-content;
+
+      max-width:
+        100%;
+
+      padding:
+        7px;
 
       border:
         1px solid var(--line);
@@ -768,29 +702,35 @@
         var(--panel-2);
     }
 
-    .image-preview img {
+    .preview-image {
       width:
         68px;
 
       height:
         68px;
 
-      display:
-        block;
-
       object-fit:
         cover;
+
+      display:
+        block;
 
       border-radius:
         9px;
     }
 
-    .image-preview-info {
-      min-width:
-        0;
-
+    .preview-name {
       max-width:
-        190px;
+        180px;
+
+      overflow:
+        hidden;
+
+      text-overflow:
+        ellipsis;
+
+      white-space:
+        nowrap;
 
       color:
         var(--muted);
@@ -805,9 +745,6 @@
 
       height:
         32px;
-
-      flex:
-        none;
 
       border:
         0;
@@ -826,21 +763,20 @@
 
       line-height:
         1;
-
     }
 
-    .image-attachment {
-      display:
-        block;
-
+    .user-image {
       width:
-        180px;
+        190px;
 
       max-width:
         100%;
 
       max-height:
-        220px;
+        230px;
+
+      display:
+        block;
 
       margin-bottom:
         8px;
@@ -856,1763 +792,4 @@
     }
 
     /* =========================
-       COMPOSER
-       ========================= */
-
-    .composer-area {
-      padding:
-        14px
-        max(
-          15px,
-          calc((100% - 920px) / 2)
-        )
-        16px;
-
-      border-top:
-        1px solid var(--line);
-
-      background:
-        rgba(7, 10, 20, 0.96);
-
-      backdrop-filter:
-        blur(14px);
-    }
-
-    .composer {
-      display:
-        flex;
-
-      gap:
-        9px;
-
-      align-items:
-        flex-end;
-
-      padding:
-        9px;
-
-      border:
-        1px solid var(--line);
-
-      border-radius:
-        20px;
-
-      background:
-        var(--panel);
-    }
-
-    .message-tools {
-      display:
-        flex;
-
-      gap:
-        7px;
-
-      align-items:
-        flex-end;
-
-      flex:
-        none;
-    }
-
-    .tool,
-    .send {
-      width:
-        48px;
-
-      height:
-        48px;
-
-      flex:
-        none;
-
-      border:
-        1px solid var(--line);
-
-      border-radius:
-        14px;
-
-      background:
-        var(--panel-2);
-
-      color:
-        var(--text);
-
-      transition:
-        0.2s ease;
-    }
-
-    .tool:hover {
-      border-color:
-        var(--purple);
-
-      transform:
-        translateY(-1px);
-    }
-
-    .tool.active {
-      border-color:
-        var(--purple);
-
-      box-shadow:
-        0 0 0 2px
-        rgba(139, 92, 246, 0.12);
-    }
-
-    .send {
-      border:
-        0;
-
-      background:
-        linear-gradient(
-          135deg,
-          var(--purple),
-          var(--blue)
-        );
-
-      font-size:
-        20px;
-    }
-
-    .send:hover {
-      filter:
-        brightness(1.08);
-    }
-
-    .send.stop {
-      background:
-        var(--red);
-    }
-
-    .input-wrap {
-      flex:
-        1;
-
-      min-width:
-        0;
-    }
-
-    textarea {
-      width:
-        100%;
-
-      min-height:
-        48px;
-
-      max-height:
-        160px;
-
-      padding:
-        10px;
-
-      border:
-        0;
-
-      outline:
-        0;
-
-      resize:
-        none;
-
-      background:
-        transparent;
-
-      color:
-        var(--text);
-
-      line-height:
-        1.7;
-    }
-
-    textarea::placeholder {
-      color:
-        var(--muted);
-    }
-
-    .note {
-      margin-top:
-        7px;
-
-      text-align:
-        center;
-
-      color:
-        var(--muted);
-
-      font-size:
-        10px;
-    }
-
-    .hidden-input {
-      display:
-        none;
-    }
-
-    /* =========================
-       MOBILE
-       ========================= */
-
-    @media (max-width: 800px) {
-      .sidebar {
-        display:
-          none;
-      }
-
-      .topbar {
-        padding:
-          0 14px;
-      }
-
-      .chat {
-        padding:
-          18px 10px;
-      }
-
-      .composer-area {
-        padding:
-          10px;
-      }
-
-      .message-body {
-        max-width:
-          90%;
-      }
-
-      .welcome {
-        margin-top:
-          45px;
-      }
-
-      .welcome h1 {
-        font-size:
-          27px;
-      }
-
-      .message-tools {
-        gap:
-          5px;
-      }
-
-      .tool,
-      .send {
-        width:
-          44px;
-
-        height:
-          44px;
-      }
-
-      .image-preview-info {
-        display:
-          none;
-      }
-    }
-  </style>
-</head>
-
-<body>
-
-  <div class="app">
-
-    <!-- =========================
-         SIDEBAR
-         ========================= -->
-
-    <aside class="sidebar">
-
-      <div class="brand">
-
-        <div class="brand-logo">
-          <svg viewBox="0 0 100 100">
-
-            <path
-              d="M12 37L50 15L88 37L50 59Z"
-              fill="white"
-            />
-
-            <path
-              d="M25 44V78H75V44L50 59Z"
-              fill="#38bdf8"
-            />
-
-            <path
-              d="M41 58H59V78H41Z"
-              fill="white"
-            />
-
-          </svg>
-        </div>
-
-        <div>
-
-          <div class="brand-title">
-            Education GPT
-          </div>
-
-          <div class="brand-subtitle">
-            Your Smart AI Companion
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <button
-        id="newChat"
-        class="new-chat"
-        type="button"
-      >
-        ＋ محادثة جديدة
-      </button>
-
-
-      <div class="status">
-        🟢 <b>AI Online</b>
-        <br>
-        Education GPT جاهز للمساعدة
-      </div>
-
-
-      <div class="section-title">
-        أدوات سريعة
-      </div>
-
-
-      <button
-        class="quick"
-        type="button"
-        data-prompt="اشرح لي هذا الموضوع بطريقة بسيطة ثم اختبرني"
-      >
-        ⚡ اشرح واختبرني
-      </button>
-
-
-      <button
-        class="quick"
-        type="button"
-        data-prompt="لخص لي هذا الموضوع مع أهم النقاط"
-      >
-        📚 لخص الموضوع
-      </button>
-
-
-      <button
-        class="quick"
-        type="button"
-        data-prompt="اختبرني سؤالًا واحدًا كل مرة وانتظر إجابتي"
-      >
-        ✅ اختبرني
-      </button>
-
-
-      <button
-        class="quick"
-        type="button"
-        data-prompt="اعمل لي خطة مناسبة لمذاكرتي"
-      >
-        📅 خطة مذاكرة
-      </button>
-
-
-      <div class="section-title">
-        المجالات
-      </div>
-
-
-      <div class="subjects">
-
-        <button
-          class="subject"
-          type="button"
-          data-prompt="ساعدني في البرمجة"
-        >
-          💻 البرمجة
-        </button>
-
-
-        <button
-          class="subject"
-          type="button"
-          data-prompt="ساعدني في الكتابة"
-        >
-          ✍️ الكتابة
-        </button>
-
-
-        <button
-          class="subject"
-          type="button"
-          data-prompt="ساعدني في تطوير الألعاب"
-        >
-          🎮 الألعاب
-        </button>
-
-
-        <button
-          class="subject"
-          type="button"
-          data-prompt="ساعدني في المشاريع"
-        >
-          🚀 المشاريع
-        </button>
-
-
-        <button
-          class="subject"
-          type="button"
-          data-prompt="اشرح لي موضوعًا أريد تعلمه"
-        >
-          🎓 التعليم
-        </button>
-
-
-        <button
-          class="subject"
-          type="button"
-          data-prompt="ساعدني في حل هذه المشكلة"
-        >
-          🧠 حل المشكلات
-        </button>
-
-      </div>
-
-
-      <div class="spacer"></div>
-
-
-      <a
-        class="login-link"
-        href="/login.html"
-      >
-        👤 تسجيل الدخول
-      </a>
-
-    </aside>
-
-
-    <!-- =========================
-         MAIN
-         ========================= -->
-
-    <main class="main">
-
-      <header class="topbar">
-
-        <div class="top-brand">
-
-          <div class="top-logo">
-
-            <svg viewBox="0 0 100 100">
-
-              <path
-                d="M12 37L50 15L88 37L50 59Z"
-                fill="white"
-              />
-
-              <path
-                d="M25 44V78H75V44L50 59Z"
-                fill="#38bdf8"
-              />
-
-              <path
-                d="M41 58H59V78H41Z"
-                fill="white"
-              />
-
-            </svg>
-
-          </div>
-
-
-          <div class="top-title">
-            Education GPT ✨
-          </div>
-
-        </div>
-
-
-        <div class="online">
-          ● متصلة الآن
-        </div>
-
-      </header>
-
-
-      <section
-        id="chat"
-        class="chat"
-      >
-
-        <div
-          id="welcome"
-          class="welcome"
-        >
-
-          <div class="welcome-logo">
-
-            <svg viewBox="0 0 100 100">
-
-              <path
-                d="M12 37L50 15L88 37L50 59Z"
-                fill="white"
-              />
-
-              <path
-                d="M25 44V78H75V44L50 59Z"
-                fill="#38bdf8"
-              />
-
-              <path
-                d="M41 58H59V78H41Z"
-                fill="white"
-              />
-
-            </svg>
-
-          </div>
-
-
-          <h1>
-            أهلًا بك في Education GPT ✨
-          </h1>
-
-
-          <p>
-            مساعدك الذكي الشامل.
-            <br>
-            تعليم، كتابة، برمجة، ألعاب، مشاريع، صور وأفكار.
-          </p>
-
-        </div>
-
-
-        <div
-          id="typing"
-          class="typing"
-        >
-          Education GPT يكتب
-
-          <span class="dots">
-            <span></span>
-            <span></span>
-            <span></span>
-          </span>
-
-        </div>
-
-      </section>
-
-
-      <div class="composer-area">
-
-        <div class="composer">
-
-          <div class="message-tools">
-
-            <button
-              id="imageButton"
-              class="tool"
-              type="button"
-              title="إضافة صورة"
-            >
-              🖼️
-            </button>
-
-
-            <button
-              id="voice"
-              class="tool"
-              type="button"
-              title="الإملاء الصوتي"
-            >
-              🎙️
-            </button>
-
-          </div>
-
-
-          <div class="input-wrap">
-
-            <div
-              id="imagePreview"
-              class="image-preview"
-            >
-
-              <div class="image-preview-box">
-
-                <img
-                  id="previewImage"
-                  src=""
-                  alt="معاينة الصورة"
-                >
-
-                <div
-                  id="imagePreviewInfo"
-                  class="image-preview-info"
-                >
-                  صورة مرفقة
-                </div>
-
-
-                <button
-                  id="removeImage"
-                  class="remove-image"
-                  type="button"
-                  title="إزالة الصورة"
-                >
-                  ×
-                </button>
-
-              </div>
-
-            </div>
-
-
-            <textarea
-              id="input"
-              rows="1"
-              placeholder="اكتب رسالتك إلى Education GPT أو الصق صورة بـ Ctrl+V..."
-            ></textarea>
-
-          </div>
-
-
-          <button
-            id="send"
-            class="send"
-            type="button"
-            title="إرسال"
-          >
-            ➤
-          </button>
-
-        </div>
-
-
-        <div class="note">
-          Enter للإرسال • Shift + Enter لسطر جديد • Ctrl + V للصق صورة
-        </div>
-
-      </div>
-
-    </main>
-
-  </div>
-
-
-  <input
-    id="imageInput"
-    class="hidden-input"
-    type="file"
-    accept="image/png,image/jpeg,image/webp,image/gif,image/heic,image/heif,image/avif"
-  >
-
-
-  <script>
-    const chat =
-      document.getElementById("chat");
-
-    const input =
-      document.getElementById("input");
-
-    const send =
-      document.getElementById("send");
-
-    const typing =
-      document.getElementById("typing");
-
-    const newChat =
-      document.getElementById("newChat");
-
-    const voice =
-      document.getElementById("voice");
-
-    const imageButton =
-      document.getElementById("imageButton");
-
-    const imageInput =
-      document.getElementById("imageInput");
-
-    const imagePreview =
-      document.getElementById("imagePreview");
-
-    const previewImage =
-      document.getElementById("previewImage");
-
-    const imagePreviewInfo =
-      document.getElementById("imagePreviewInfo");
-
-    const removeImage =
-      document.getElementById("removeImage");
-
-
-    let sessionId =
-      localStorage.getItem(
-        "education_gpt_session"
-      );
-
-
-    if (!sessionId) {
-      sessionId =
-        crypto.randomUUID();
-
-      localStorage.setItem(
-        "education_gpt_session",
-        sessionId
-      );
-    }
-
-
-    let controller =
-      null;
-
-    let generating =
-      false;
-
-    let selectedImage =
-      null;
-
-
-    /* =========================
-       IMAGE HANDLING
-       ========================= */
-
-
-    function clearImage() {
-
-      selectedImage =
-        null;
-
-      previewImage.src =
-        "";
-
-      imagePreviewInfo.textContent =
-        "";
-
-      imagePreview.style.display =
-        "none";
-
-      imageButton.classList.remove(
-        "active"
-      );
-
-      imageInput.value =
-        "";
-
-    }
-
-
-    function loadImageFile(file) {
-
-      if (!file) {
-        return;
-      }
-
-
-      if (
-        !file.type ||
-        !file.type.startsWith(
-          "image/"
-        )
-      ) {
-        return;
-      }
-
-
-      /*
-        10MB limit on the client.
-        Gemini allows inline image data
-        within a larger request limit,
-        but keeping pasted images smaller
-        keeps uploads faster.
-      */
-
-      const maxSize =
-        10 * 1024 * 1024;
-
-
-      if (file.size > maxSize) {
-
-        alert(
-          "الصورة كبيرة جدًا. الحد الأقصى 10MB."
-        );
-
-        return;
-      }
-
-
-      const reader =
-        new FileReader();
-
-
-      reader.onload =
-        () => {
-
-          const result =
-            String(
-              reader.result || ""
-            );
-
-
-          const comma =
-            result.indexOf(",");
-
-
-          const base64 =
-            comma >= 0
-              ? result.slice(
-                  comma + 1
-                )
-              : result;
-
-
-          selectedImage = {
-            data:
-              base64,
-
-            mimeType:
-              file.type,
-
-            name:
-              file.name ||
-              "image"
-          };
-
-
-          previewImage.src =
-            result;
-
-
-          imagePreviewInfo.textContent =
-            selectedImage.name;
-
-
-          imagePreview.style.display =
-            "block";
-
-
-          imageButton.classList.add(
-            "active"
-          );
-
-
-          input.focus();
-        };
-
-
-      reader.onerror =
-        () => {
-
-          alert(
-            "لم أستطع قراءة الصورة."
-          );
-
-        };
-
-
-      reader.readAsDataURL(
-        file
-      );
-    }
-
-
-    imageButton.addEventListener(
-      "click",
-      () => {
-        imageInput.click();
-      }
-    );
-
-
-    imageInput.addEventListener(
-      "change",
-      () => {
-
-        const file =
-          imageInput.files?.[0];
-
-        if (file) {
-          loadImageFile(file);
-        }
-
-      }
-    );
-
-
-    removeImage.addEventListener(
-      "click",
-      clearImage
-    );
-
-
-    /*
-      Ctrl + V / Paste image support.
-      Text paste remains unchanged.
-    */
-
-    input.addEventListener(
-      "paste",
-      event => {
-
-        const items =
-          event.clipboardData?.items ||
-          [];
-
-
-        for (
-          const item of items
-        ) {
-
-          if (
-            item.kind === "file" &&
-            item.type.startsWith(
-              "image/"
-            )
-          ) {
-
-            const file =
-              item.getAsFile();
-
-
-            if (file) {
-
-              event.preventDefault();
-
-              loadImageFile(
-                file
-              );
-
-            }
-
-            return;
-          }
-
-        }
-
-      }
-    );
-
-
-    /* =========================
-       MESSAGES
-       ========================= */
-
-
-    function addMessage(
-      text,
-      user,
-      imageData = null
-    ) {
-
-      document
-        .getElementById("welcome")
-        ?.remove();
-
-
-      const row =
-        document.createElement(
-          "div"
-        );
-
-
-      row.className =
-        "message" +
-        (
-          user
-            ? " user"
-            : ""
-        );
-
-
-      const avatar =
-        document.createElement(
-          "div"
-        );
-
-
-      avatar.className =
-        "avatar" +
-        (
-          user
-            ? " user-avatar"
-            : ""
-        );
-
-
-      avatar.textContent =
-        user
-          ? "أنت"
-          : "✨";
-
-
-      const body =
-        document.createElement(
-          "div"
-        );
-
-
-      body.className =
-        "message-body";
-
-
-      if (
-        imageData &&
-        user
-      ) {
-
-        const image =
-          document.createElement(
-            "img"
-          );
-
-
-        image.className =
-          "image-attachment";
-
-
-        image.src =
-          imageData;
-
-
-        image.alt =
-          "الصورة المرفقة";
-
-
-        body.appendChild(
-          image
-        );
-
-      }
-
-
-      if (text) {
-
-        const bubble =
-          document.createElement(
-            "div"
-          );
-
-
-        bubble.className =
-          "bubble";
-
-
-        bubble.textContent =
-          text;
-
-
-        body.appendChild(
-          bubble
-        );
-
-
-        if (!user) {
-
-          const actions =
-            document.createElement(
-              "div"
-            );
-
-
-          actions.className =
-            "actions";
-
-
-          const copy =
-            document.createElement(
-              "button"
-            );
-
-
-          copy.type =
-            "button";
-
-
-          copy.className =
-            "copy";
-
-
-          copy.textContent =
-            "نسخ";
-
-
-          copy.addEventListener(
-            "click",
-            async () => {
-
-              try {
-
-                await navigator.clipboard.writeText(
-                  bubble.textContent
-                );
-
-
-                copy.textContent =
-                  "تم النسخ";
-
-
-                setTimeout(
-                  () => {
-
-                    copy.textContent =
-                      "نسخ";
-
-                  },
-                  1200
-                );
-
-              } catch (_) {}
-
-            }
-          );
-
-
-          actions.appendChild(
-            copy
-          );
-
-
-          body.appendChild(
-            actions
-          );
-
-        }
-
-        row.appendChild(
-          avatar
-        );
-
-        row.appendChild(
-          body
-        );
-
-
-        chat.insertBefore(
-          row,
-          typing
-        );
-
-
-        chat.scrollTop =
-          chat.scrollHeight;
-
-
-        return bubble;
-      }
-
-
-      row.appendChild(
-        avatar
-      );
-
-
-      row.appendChild(
-        body
-      );
-
-
-      chat.insertBefore(
-        row,
-        typing
-      );
-
-
-      chat.scrollTop =
-        chat.scrollHeight;
-
-
-      return null;
-    }
-
-
-    /* =========================
-       SEND
-       ========================= */
-
-
-    async function sendMessage() {
-
-      if (generating) {
-
-        stopGeneration();
-
-        return;
-      }
-
-
-      const message =
-        input.value.trim();
-
-
-      /*
-        Allow sending an image
-        even when text is empty.
-      */
-
-      if (
-        !message &&
-        !selectedImage
-      ) {
-        return;
-      }
-
-
-      const imageForMessage =
-        selectedImage
-          ? `data:${selectedImage.mimeType};base64,${selectedImage.data}`
-          : null;
-
-
-      addMessage(
-        message,
-        true,
-        imageForMessage
-      );
-
-
-      /*
-        IMPORTANT:
-        Clear the selected image immediately
-        from the composer after adding the
-        user's message to the chat.
-      */
-
-      const outgoingImage =
-        selectedImage;
-
-
-      clearImage();
-
-
-      input.value =
-        "";
-
-      input.style.height =
-        "48px";
-
-
-      generating =
-        true;
-
-
-      send.classList.add(
-        "stop"
-      );
-
-
-      send.textContent =
-        "■";
-
-
-      typing.style.display =
-        "block";
-
-
-      controller =
-        new AbortController();
-
-
-      try {
-
-        /*
-          Keep the normal text-only request
-          as close as possible to the old
-          request. Image fields are included
-          only when an image exists.
-        */
-
-        const requestBody = {
-          sessionId,
-          message
-        };
-
-
-        if (outgoingImage) {
-
-          requestBody.imageData =
-            outgoingImage.data;
-
-          requestBody.imageMimeType =
-            outgoingImage.mimeType;
-
-        }
-
-
-        const response =
-          await fetch(
-            "/api/chat",
-            {
-              method:
-                "POST",
-
-              headers: {
-                "Content-Type":
-                  "application/json"
-              },
-
-              body:
-                JSON.stringify(
-                  requestBody
-                ),
-
-              signal:
-                controller.signal
-            }
-          );
-
-
-        if (!response.ok) {
-
-          let errorMessage =
-            "حدث خطأ في الخادم.";
-
-
-          const raw =
-            await response.text();
-
-
-          if (raw) {
-
-            try {
-
-              const data =
-                JSON.parse(
-                  raw
-                );
-
-
-              if (data?.error) {
-                errorMessage =
-                  data.error;
-              }
-
-            } catch (_) {
-
-              errorMessage =
-                raw;
-
-            }
-
-          }
-
-
-          throw new Error(
-            errorMessage
-          );
-        }
-
-
-        if (!response.body) {
-
-          throw new Error(
-            "لم يصل Stream من الخادم."
-          );
-        }
-
-
-        typing.style.display =
-          "none";
-
-
-        const bubble =
-          addMessage(
-            "",
-            false
-          );
-
-
-        if (!bubble) {
-          throw new Error(
-            "تعذر إنشاء فقاعة الرد."
-          );
-        }
-
-
-        const reader =
-          response.body.getReader();
-
-
-        const decoder =
-          new TextDecoder(
-            "utf-8"
-          );
-
-
-        while (true) {
-
-          const result =
-            await reader.read();
-
-
-          if (result.done) {
-            break;
-          }
-
-
-          const text =
-            decoder.decode(
-              result.value,
-              {
-                stream:
-                  true
-              }
-            );
-
-
-          if (!text) {
-            continue;
-          }
-
-
-          bubble.textContent +=
-            text;
-
-
-          chat.scrollTop =
-            chat.scrollHeight;
-
-        }
-
-
-        const remaining =
-          decoder.decode();
-
-
-        if (remaining) {
-
-          bubble.textContent +=
-            remaining;
-
-        }
-
-
-        /*
-          Do not show a fake
-          "no response" message.
-        */
-
-        if (
-          !bubble.textContent.trim()
-        ) {
-
-          bubble.remove();
-
-        }
-
-      } catch (error) {
-
-        if (
-          error.name ===
-          "AbortError"
-        ) {
-          return;
-        }
-
-
-        typing.style.display =
-          "none";
-
-
-        addMessage(
-          "حدث خطأ: " +
-            error.message,
-          false
-        );
-
-      } finally {
-
-        generating =
-          false;
-
-
-        controller =
-          null;
-
-
-        typing.style.display =
-          "none";
-
-
-        send.classList.remove(
-          "stop"
-        );
-
-
-        send.textContent =
-          "➤";
-
-
-        input.focus();
-
-      }
-    }
-
-
-    function stopGeneration() {
-
-      if (controller) {
-        controller.abort();
-      }
-
-
-      controller =
-        null;
-
-
-      generating =
-        false;
-
-
-      typing.style.display =
-        "none";
-
-
-      send.classList.remove(
-        "stop"
-      );
-
-
-      send.textContent =
-        "➤";
-
-    }
-
-
-    send.addEventListener(
-      "click",
-      sendMessage
-    );
-
-
-    /* =========================
-       TEXTAREA
-       ========================= */
-
-
-    input.addEventListener(
-      "keydown",
-      event => {
-
-        if (
-          event.key ===
-            "Enter" &&
-          !event.shiftKey
-        ) {
-
-          event.preventDefault();
-
-          sendMessage();
-
-        }
-
-      }
-    );
-
-
-    input.addEventListener(
-      "input",
-      () => {
-
-        input.style.height =
-          "48px";
-
-
-        input.style.height =
-          Math.min(
-            input.scrollHeight,
-            160
-          ) + "px";
-
-      }
-    );
-
-
-    /* =========================
-       NEW CHAT
-       ========================= */
-
-
-    newChat.addEventListener(
-      "click",
-      () => {
-
-        stopGeneration();
-
-
-        clearImage();
-
-
-        localStorage.removeItem(
-          "education_gpt_session"
-        );
-
-
-        location.reload();
-
-      }
-    );
-
-
-    /* =========================
-       QUICK PROMPTS
-       ========================= */
-
-
-    document
-      .querySelectorAll(
-        "[data-prompt]"
-      )
-      .forEach(
-        button => {
-
-          button.addEventListener(
-            "click",
-            () => {
-
-              input.value =
-                button.dataset.prompt;
-
-
-              input.focus();
-
-
-              sendMessage();
-
-            }
-          );
-
-        }
-      );
-
-
-    /* =========================
-       VOICE INPUT
-       ========================= */
-
-
-    const Recognition =
-      window.SpeechRecognition ||
-      window.webkitSpeechRecognition;
-
-
-    if (Recognition) {
-
-      const recognition =
-        new Recognition();
-
-
-      recognition.lang =
-        "ar-EG";
-
-
-      recognition.continuous =
-        false;
-
-
-      recognition.interimResults =
-        true;
-
-
-      voice.addEventListener(
-        "click",
-        () => {
-
-          try {
-
-            recognition.start();
-
-            voice.classList.add(
-              "active"
-            );
-
-            voice.textContent =
-              "🔴";
-
-          } catch (_) {}
-
-        }
-      );
-
-
-      recognition.onresult =
-        event => {
-
-          let text =
-            "";
-
-
-          for (
-            let i =
-              event.resultIndex;
-
-            i <
-              event.results.length;
-
-            i++
-          ) {
-
-            text +=
-              event.results[i][0].transcript;
-
-          }
-
-
-          input.value =
-            text;
-
-
-          input.dispatchEvent(
-            new Event(
-              "input"
-            )
-          );
-
-        };
-
-
-      recognition.onend =
-        () => {
-
-          voice.classList.remove(
-            "active"
-          );
-
-
-          voice.textContent =
-            "🎙️";
-
-        };
-
-
-      recognition.onerror =
-        () => {
-
-          voice.classList.remove(
-            "active"
-          );
-
-
-          voice.textContent =
-            "🎙️";
-
-        };
-
-    } else {
-
-      voice.addEventListener(
-        "click",
-        () => {
-
-          alert(
-            "الإملاء الصوتي غير مدعوم في هذا المتصفح."
-          );
-
-        }
-      );
-
-    }
-  </script>
-
-</body>
-</html>
+      
