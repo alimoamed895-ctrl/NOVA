@@ -830,7 +830,6 @@ content="width=device-width, initial-scale=1.0"
 
   <div class="app">
 
-```
 <aside class="sidebar">
 
   <div class="brand">
@@ -1123,6 +1122,15 @@ content="width=device-width, initial-scale=1.0"
         🎙️
       </button>
 
+      <button
+        id="generateImage"
+        class="tool"
+        type="button"
+        title="توليد صورة"
+      >
+        🎨
+      </button>
+
 
       <textarea
         id="input"
@@ -1149,7 +1157,6 @@ content="width=device-width, initial-scale=1.0"
   </div>
 
 </main>
-```
 
   </div>
 
@@ -1844,6 +1851,128 @@ content="width=device-width, initial-scale=1.0"
         };
 
     }
+
+
+    /* =========================
+       IMAGE GENERATION
+       ========================= */
+
+    const generateImageBtn =
+      document.getElementById(
+        "generateImage"
+      );
+
+    generateImageBtn.addEventListener(
+      "click",
+      async () => {
+
+        const prompt =
+          input.value.trim();
+
+        if (!prompt) {
+          alert(
+            "اكتب وصف الصورة اللي عايزها الأول."
+          );
+          return;
+        }
+
+        addMessage(
+          prompt,
+          true
+        );
+
+        input.value =
+          "";
+
+        const bubble =
+          addMessage(
+            "جاري توليد الصورة...",
+            false
+          );
+
+        typing.style.display =
+          "block";
+
+        try {
+
+          const response =
+            await fetch(
+              "/api/image",
+              {
+                method:
+                  "POST",
+
+                headers: {
+                  "Content-Type":
+                    "application/json"
+                },
+
+                body:
+                  JSON.stringify({
+                    prompt
+                  })
+              }
+            );
+
+          const data =
+            await response.json();
+
+          typing.style.display =
+            "none";
+
+          if (!response.ok) {
+
+            bubble.textContent =
+              "خطأ: " +
+              (
+                data.error ||
+                "فشل توليد الصورة"
+              );
+
+            return;
+          }
+
+          bubble.textContent =
+            data.text || "";
+
+          const img =
+            document.createElement(
+              "img"
+            );
+
+          img.style.maxWidth =
+            "260px";
+
+          img.style.borderRadius =
+            "12px";
+
+          img.style.display =
+            "block";
+
+          img.style.marginBottom =
+            "8px";
+
+          img.src =
+            `data:${data.mimeType};base64,${data.imageData}`;
+
+          bubble.parentElement.insertBefore(
+            img,
+            bubble
+          );
+
+        } catch (error) {
+
+          typing.style.display =
+            "none";
+
+          bubble.textContent =
+            "حدث خطأ أثناء توليد الصورة.";
+
+        }
+
+      }
+    );
+
   </script>
 
 </body>
