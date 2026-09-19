@@ -35,6 +35,13 @@ const SYSTEM_PROMPT = [
   "لا تكرر نفسك ولا تختلق معلومات."
 ].join("\n");
 
+// قواعد إضافية بتتحط بس لما تكون الرسالة جاية من "مكالمة صوتية"
+const VOICE_RULES = [
+  "أنت الآن في مكالمة صوتية مباشرة: أجب بجملتين إلى أربع جمل قصيرة وبأسلوب محادثة طبيعي.",
+  "لا تستخدم Markdown أو قوائم أو جداول أو رموزًا أو إيموجي أو كودًا، لأن ردك سيُقرأ بصوت عالٍ.",
+  "إذا احتاج الجواب إلى كود أو تفصيل طويل، لخّصه شفهيًا واقترح على المستخدم أن يكتب طلبه في الشات."
+].join("\n");
+
 /* ---------- Rate limit بسيط (best-effort، مجاني، من غير قاعدة بيانات) ---------- */
 
 const hits = globalThis.__EDU_HITS || new Map();
@@ -141,6 +148,8 @@ export default async function handler(req, res) {
         .json({ error: "الصورة كبيرة جدًا. جرّب صورة أصغر." });
     }
 
+    const voice = body.voice === true;
+
     const input =
       imageData && imageMimeType
         ? [
@@ -153,10 +162,12 @@ export default async function handler(req, res) {
       model: MODEL,
       input,
       stream: true,
-      system_instruction: SYSTEM_PROMPT,
+      system_instruction: voice
+        ? SYSTEM_PROMPT + "\n" + VOICE_RULES
+        : SYSTEM_PROMPT,
       generation_config: {
         thinking_level: "minimal",
-        max_output_tokens: 1800
+        max_output_tokens: voice ? 500 : 1800
       }
     };
 
