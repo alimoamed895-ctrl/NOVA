@@ -418,6 +418,24 @@
 
     .composer:focus-within { border-color: var(--purple); }
 
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 110px;
+      transform: translateX(-50%);
+      max-width: min(92vw, 520px);
+      padding: 12px 16px;
+      border: 1px solid #7f1d1d;
+      border-radius: 14px;
+      background: #2a0f14;
+      color: #fecaca;
+      font-size: 13px;
+      line-height: 1.8;
+      text-align: center;
+      z-index: 50;
+      display: none;
+    }
+
     @media (max-width: 800px) {
       .sidebar { display: none; }
       .new-chat-top { display: block; }
@@ -576,6 +594,8 @@
     </main>
 
   </div>
+
+  <div id="toast" class="toast" role="alert"></div>
 
   <input id="imageInput" class="hidden-input" type="file" accept="image/*">
 
@@ -1024,11 +1044,33 @@
        الإملاء الصوتي
        ========================= */
 
+    const toast = $("toast");
+    let toastTimer = 0;
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.style.display = "block";
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => { toast.style.display = "none"; }, 7000);
+    }
+
+    const VOICE_ERRORS = {
+      "not-allowed": "المتصفح مانع الميكروفون. اضغط على أيقونة القفل 🔒 جنب عنوان الموقع، اختار الميكروفون ← سماح، وبعدين حدّث الصفحة.",
+      "service-not-allowed": "المتصفح مانع خدمة التعرف على الصوت. اسمح بالميكروفون من أيقونة القفل 🔒 وحدّث الصفحة.",
+      "no-speech": "مسمعتش صوت. اتأكد إن الميكروفون الصح متحدد في الويندوز، وابدأ الكلام بعد ما الزرار يحمر.",
+      "audio-capture": "مفيش ميكروفون متوصل أو متاح. اتأكد إن ميكروفون شغال ومش مستخدم في برنامج تاني.",
+      "network": "خدمة التعرف على الصوت محتاجة إنترنت مستقر (المتصفح بيبعت الصوت لسيرفرات جوجل). جرّب تاني.",
+      "language-not-supported": "لغة الإملاء مش مدعومة في متصفحك."
+    };
+
     const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (Recognition) {
       const recognition = new Recognition();
       let listening = false;
+      let gotText = false;
+      let hadError = false;
+      let baseText = "";
 
       recognition.lang = "ar-EG";
       recognition.continuous = false;
@@ -1040,36 +1082,71 @@
         voice.textContent = "🎙️";
       };
 
-      voice.addEventListener("click", () => {
+      voice.addEventListener("click", async () => {
         if (listening) {
           recognition.stop();
           return;
         }
+
+        // بنطلب إذن الميكروفون صراحةً الأول عشان الرسالة تبقى واضحة لو اترفض
+        try {
+          if (navigator.mediaDevices?.getUserMedia) {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            stream.getTracks().forEach(track => track.stop());
+          }
+        } catch (err) {
+          const key = err?.name === "NotFoundError" ? "audio-capture" : "not-allowed";
+          showToast(VOICE_ERRORS[key]);
+          return;
+        }
+
+        baseText = input.value.trim();
+        gotText = false;
+        hadError = false;
 
         try {
           recognition.start();
           listening = true;
           voice.classList.add("active");
           voice.textContent = "🔴";
-        } catch {}
+        } catch {
+          showToast("تعذر بدء الإملاء. حدّث الصفحة وجرّب تاني.");
+        }
       });
 
       recognition.onresult = event => {
         let text = "";
 
-        for (let i = event.resultIndex; i < event.results.length; i++) {
+        for (let i = 0; i < event.results.length; i++) {
           text += event.results[i][0].transcript;
         }
 
-        input.value = text;
+        if (text.trim()) gotText = true;
+
+        input.value = (baseText ? baseText + " " : "") + text;
         input.dispatchEvent(new Event("input"));
       };
 
-      recognition.onend = stopUi;
-      recognition.onerror = stopUi;
+      recognition.onerror = event => {
+        hadError = true;
+        stopUi();
+
+        if (event.error === "aborted") return;
+
+        if (event.error === "language-not-supported") recognition.lang = "ar-SA";
+
+        showToast(VOICE_ERRORS[event.error] || ("خطأ في الإملاء الصوتي: " + event.error));
+      };
+
+      recognition.onend = () => {
+        stopUi();
+        if (!gotText && !hadError) {
+          showToast(VOICE_ERRORS["no-speech"]);
+        }
+      };
     } else {
       voice.addEventListener("click", () => {
-        alert("الإملاء الصوتي غير مدعوم في هذا المتصفح.");
+        showToast("الإملاء الصوتي مش مدعوم في المتصفح ده. جرّب Chrome أو Edge.");
       });
     }
   </script>
