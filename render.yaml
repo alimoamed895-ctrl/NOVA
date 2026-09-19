@@ -1,9 +1,0 @@
-services:
-  - type: web
-    name: nova-online-ai
-    runtime: node
-    buildCommand: npm install
-    startCommand: npm start
-    envVars:
-      - key: GEMINI_API_KEY
-        sync: false
