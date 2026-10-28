@@ -1080,6 +1080,7 @@
 
       try {
         const requestBody = { message: text, previousInteractionId };
+        if (window.eduReplayContext) { requestBody.context = window.eduReplayContext; requestBody.previousInteractionId = ""; window.eduReplayContext = ""; }
         if (callActive) requestBody.voice = true;
 
         if (outgoingImage) {
@@ -1136,6 +1137,32 @@
         if (!callActive) input.focus();
       }
     }
+
+    // API for enhancements: branch safely from the visible saved transcript.
+    window.eduActions = {
+      get busy() { return generating; },
+      stop() { controller?.abort(); },
+      resend(index, replacement) {
+        if (generating || callActive || selectedImage) return false;
+        if (!Number.isInteger(index) || index < 0 || index >= history.length || history[index].role !== "user") return false;
+        const old = history[index].text || "";
+        if (old.startsWith("🖼️ [صورة] ")) { alert("تعديل الرسائل المصحوبة بصور غير مدعوم؛ أرسل الصورة مرة أخرى."); return false; }
+        const value = String(replacement).trim();
+        if (!value) return false;
+        const prefix = history.slice(0, index);
+        // No stale previousInteractionId: rebuild prior textual context explicitly.
+        window.eduReplayContext = prefix.map(m => (m.role === "user" ? "User: " : "Assistant: ") + m.text).join("\n\n").slice(-18000);
+        history = prefix;
+        storageSet(KEY_HISTORY, JSON.stringify(history));
+        previousInteractionId = "";
+        storageRemove(KEY_PREV);
+        chat.querySelectorAll(".message").forEach(node => node.remove());
+        for (const m of history) addMessage(m.text, m.role === "user");
+        input.value = value;
+        sendMessage();
+        return true;
+      }
+    };
 
     /* =========================
        الأحداث
